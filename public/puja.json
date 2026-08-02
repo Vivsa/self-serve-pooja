@@ -1,0 +1,1561 @@
+{
+  "title": "सत्य नारायण पूजा",
+  "language": "mr",
+  "source": "सत्यनारायण पूजा विधी_20220724.xlsx",
+  "notes": "Sections renumbered sequentially in performance (row) order; originalNumber preserves the old sheet label. participation/duration_hint/skippable are inferred defaults - review and adjust.",
+  "sections": [
+    {
+      "id": "s01",
+      "order": 1,
+      "originalNumber": 1,
+      "title": "पूजा प्रारंभ",
+      "steps": [
+        {
+          "id": "s01-01",
+          "title": "देवांची परवानगी",
+          "audioFile": null,
+          "instruction": "देवांना हळद कुंकू वाहावे, विडा ठेवावा, नमस्कार करावा",
+          "participation": "family-joins",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s01-02",
+          "title": "मोठ्यांची परवानगी",
+          "audioFile": null,
+          "instruction": "आई वडील, मोठ्यांना नमस्कार करावा",
+          "participation": "family-joins",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "text"
+        }
+      ]
+    },
+    {
+      "id": "s02",
+      "order": 2,
+      "originalNumber": 2,
+      "title": "दिराचम्य प्राणायाम",
+      "steps": [
+        {
+          "id": "s02-01",
+          "title": "आचमन",
+          "audioFile": null,
+          "instruction": "तीन वेळा आचमन करणे, चौथे उजव्या हातावरून पाणी सोडणे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s02-02",
+          "title": "आचमन",
+          "audioFile": null,
+          "instruction": "तीन वेळा आचमन करणे, चौथे उजव्या हातावरून पाणी सोडणे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s02-03",
+          "title": "आचमन सर्व नावे",
+          "audioFile": "०२ - दिराचम्य - आचमन - सर्व नावे.mp3",
+          "instruction": "नमस्कार करून बसणे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s02-04",
+          "title": "प्राणायाम",
+          "audioFile": "०२ - प्राणायाम - पूर्ण मंत्र.mp3",
+          "instruction": "अनुलोम विलोम प्राणायाम करणे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s03",
+      "order": 3,
+      "originalNumber": 3,
+      "title": "ध्यान",
+      "steps": [
+        {
+          "id": "s03-01",
+          "title": "ध्यान",
+          "audioFile": "०३ - ध्यान - पूर्ण मंत्र.mp3",
+          "instruction": "नमस्कार मुद्रा करून बसणे. मनात ध्यान करणे.",
+          "participation": "priest-only",
+          "duration_hint": 60,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s04",
+      "order": 4,
+      "originalNumber": 4,
+      "title": "संकल्प",
+      "steps": [
+        {
+          "id": "s04-01",
+          "title": "संकल्प",
+          "audioFile": "०४ - संकल्प - मंत्र ०१.mp3",
+          "instruction": "नमस्कार करून बसणे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s04-02",
+          "title": "संकल्प",
+          "audioFile": null,
+          "instruction": "मंत्र म्हणणे. डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात पाणी सोडणे.",
+          "participation": "priest-only",
+          "duration_hint": 120,
+          "skippable": false,
+          "mediaType": "text",
+          "textContent": "मम आत्मन: श्रुति स्मृति पुराणोक्त फल प्रापत्यर्थम् अस्माकं  संकुटुंबानाम सपरिवारणाम् क्षेम स्थैर्य आयुरारोग्य ऐश्वर्य प्रापत्यर्थ सकल पीडा परिहारार्थम् मनोप्सित सकल मनोरथ सिद्द्यर्थं श्रीसत्यनारायणदेवता प्रीत्यर्थम् यथाज्ञानेन यथामिलितउपचारद्रव्यै: ध्यानआवाहनदि षोदशोपूजनमहम् करिष्ये"
+        },
+        {
+          "id": "s04-03",
+          "title": "संकल्प",
+          "audioFile": "०४ - संकल्प - मंत्र ०२.mp3",
+          "instruction": "नमस्कार करून बसणे. डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात पाणी सोडणे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s05",
+      "order": 5,
+      "originalNumber": 5,
+      "title": "गणपती पूजा",
+      "steps": [
+        {
+          "id": "s05-01",
+          "title": "प्रार्थना",
+          "audioFile": "५ - गणपती - ०१ प्रार्थना.mp3",
+          "instruction": "तांदुळात सुपारी ठेऊन त्याला गणपती समजून पुढील उपचार करणे",
+          "participation": "family-joins",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-02",
+          "title": "आवाहन",
+          "audioFile": "५ - गणपती - ०२ आवाहन.mp3",
+          "instruction": "हातात अक्षता घेऊन नमस्कार मुद्रा करून बसणे. मंत्र पूर्ण झाल्यावर अक्षता गणपतीवर वाहाव्यात",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-03",
+          "title": "ध्यान",
+          "audioFile": "५ - गणपती - ०३ ध्यान.mp3",
+          "instruction": "नमस्कार मुद्रा करून बसणे. मनात ध्यान करणे.",
+          "participation": "priest-only",
+          "duration_hint": 60,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-04",
+          "title": "आसन",
+          "audioFile": "५ - गणपती - ०४ आसन.mp3",
+          "instruction": "गणपतीवर अक्षता वाहाव्यात",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-05",
+          "title": "पाद्यम्",
+          "audioFile": "५ - गणपती - ०५ पाद्यम.mp3",
+          "instruction": "पळीने गणपतीवर पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-06",
+          "title": "अर्घ्यम्",
+          "audioFile": "५ - गणपती - ०६ अर्घ्यम्.mp3",
+          "instruction": "पळीने गणपतीवर गंध अक्षता मिश्रित पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-07",
+          "title": "आचमनम्",
+          "audioFile": "५ - गणपती - ०७ आचमनम्.mp3",
+          "instruction": "पळीने गणपतीवर पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-08",
+          "title": "स्नानम्",
+          "audioFile": "५ - गणपती - ०८ स्नानम्.mp3",
+          "instruction": "पळीने गणपतीवर पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-09",
+          "title": "प्रतिष्ठा",
+          "audioFile": "५ - गणपती - ०९ प्रतिष्ठा.mp3",
+          "instruction": "नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-10",
+          "title": "वस्त्रम्",
+          "audioFile": "५ - गणपती - १० वस्त्रम्.mp3",
+          "instruction": "कापसाची दोन वस्त्रे वाहावीत",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-11",
+          "title": "जानवे",
+          "audioFile": "५ - गणपती - ११ जानवे.mp3",
+          "instruction": "जानवे वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-12",
+          "title": "गंध",
+          "audioFile": "५ - गणपती - १२ गंध.mp3",
+          "instruction": "सुपारीच्या गणपतीला गंध लावावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-13",
+          "title": "अलंकार",
+          "audioFile": "५ - गणपती - १३ अलंकार.mp3",
+          "instruction": "गणपतीवर अक्षता वाहाव्यात",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-14",
+          "title": "सौभाग्य द्रव्य",
+          "audioFile": "५ - गणपती - १४ हळद कुंकू.mp3",
+          "instruction": "हळद कुंकू वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-15",
+          "title": "सुवासिक द्रव्य",
+          "audioFile": "५ - गणपती - १५ सिंदूर.mp3",
+          "instruction": "शेंदूर, अष्टगंध, वगैरे सुवासिक द्रव्य लावावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-16",
+          "title": "पुष्प",
+          "audioFile": "५ - गणपती - १६ फुले दूर्वा.mp3",
+          "instruction": "लाल फुले व दूर्वा वाहाव्या",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-17",
+          "title": "धूप, दीप",
+          "audioFile": "५ - गणपती - १७ धूप दीप.mp3",
+          "instruction": "उदबत्ती ओवाळावी, नंतर निरंजन ओवाळावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-18",
+          "title": "नैवेद्य",
+          "audioFile": "५ - गणपती - १७ नैवेद्य.mp3",
+          "instruction": "चौकोनी मंडल करून त्यावर गूळखोबरे ठेऊन पळीभर पाणी हातात घेऊन दोन वेळा नैवेद्या भोवती फिरवावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-19",
+          "title": "नैवेद्य",
+          "audioFile": "५ - गणपती - १८ नैवेद्य २.mp3",
+          "instruction": "डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात पाणी सोडावे, पळीभर पाणी हातात घेऊन दोन वेळा नैवेद्या भोवती फिरवावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-20",
+          "title": "उत्तरापोषणं, हस्तप्रक्षालनं, मुख प्रक्षालनं",
+          "audioFile": "५ - गणपती - १९ उत्तरापोषण, मुख हस्त.mp3",
+          "instruction": "तीन वेळा डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात सोडणे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-21",
+          "title": "मुखवास",
+          "audioFile": "५ - गणपती - २० मुखवास.mp3",
+          "instruction": "विडा, सुपारी, व दक्षिणा ठेऊन त्यावर पळीने पाणी सोडावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-22",
+          "title": "मंत्रपुष्प",
+          "audioFile": "५ - गणपती - २१ मंत्रपुष्प.mp3",
+          "instruction": "गणपतीला फूल वाहावे व नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s05-23",
+          "title": "नमस्कार",
+          "audioFile": "५ - गणपती - २२ नमस्कार.mp3",
+          "instruction": "नमस्कार करून मग, डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात पाणी सोडणे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s06",
+      "order": 6,
+      "originalNumber": 6,
+      "title": "षडंग न्यास",
+      "steps": [
+        {
+          "id": "s06-01",
+          "title": "आसनमांडी",
+          "audioFile": "६ - षडंगन्यास - ०० मंत्र.mp3",
+          "instruction": "डाव्या गूढग्यावर उजवे पाऊल ठेऊन, उजव्या गूढग्यावर डावा हात उताणा ठेवावा. उजव्या हातात पाणी घेऊन ते आपल्या मस्तकाभोवती फिरवून डाव्या हातात घालावे व त्यावर उजवा हात उपडा ठेवावा.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s06-02",
+          "title": "हृदय",
+          "audioFile": "६ - षडंगन्यास - ०१ हृदय.mp3",
+          "instruction": "छातीला उजवा हात लावावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s06-03",
+          "title": "शिर",
+          "audioFile": "६ - षडंगन्यास - ०२ शिर.mp3",
+          "instruction": "मस्तकाला हात लावावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s06-04",
+          "title": "शिखा",
+          "audioFile": "६ - षडंगन्यास - ०३ शिखा.mp3",
+          "instruction": "शेंडीला हात लावावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s06-05",
+          "title": "कवच",
+          "audioFile": "६ - षडंगन्यास - ०४ कवच.mp3",
+          "instruction": "हाताची ओंजळ करून छातीकडे तीन वेळा फिरवावी",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s06-06",
+          "title": "नेत्र त्रय",
+          "audioFile": "६ - षडंगन्यास - ०५ नेत्र.mp3",
+          "instruction": "उजव्या हाताची तीन बोटे डोळे व भुवईच्या मध्ये लावावी",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s06-07",
+          "title": "अस्त्र",
+          "audioFile": "६ - षडंगन्यास - ०६ अस्त्र.mp3",
+          "instruction": "टाळी वाजवावी",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s07",
+      "order": 7,
+      "originalNumber": 7,
+      "title": "कलश स्थापन",
+      "steps": [
+        {
+          "id": "s07-01",
+          "title": "कलश",
+          "audioFile": "७ - साहित्य - ०१ कलश पूजन.mp3",
+          "instruction": "पूजेसाठी पाणी भरून घेतलेला तांब्या असेल त्याला गंध, अक्षता व फूल वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s07-02",
+          "title": "शंख",
+          "audioFile": "७ - साहित्य - ०२ शंख पूजन.mp3",
+          "instruction": "चौरंगावर आपल्या उजव्या बाजूला ठेवलेल्या शंखास स्नान घालावे. पाणी भरून ठेवावा. गंध फूल वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s07-03",
+          "title": "घंटा",
+          "audioFile": "७ - साहित्य - ०३ घंटा पूजन.mp3",
+          "instruction": "चौरंगावर आपल्या डाव्या बाजूला ठेवलेल्या घंटेला स्नान घालावे. वस्त्राने पुसून एकदा वाजवून जागेवर ठेवावी. गंध फूल वाहावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s07-04",
+          "title": "दीप",
+          "audioFile": "७ - साहित्य - ०४ दीप पूजन.mp3",
+          "instruction": "दिवा लावावा. गंध, फूल, हळद कुंकू वाहावे. नमस्कार करावा.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s07-05",
+          "title": "पूजा साहित्य",
+          "audioFile": "७ - साहित्य - ०५ शूची.mp3",
+          "instruction": "कलशातील पाणी पळीने हातात घेऊन तुलसी पत्राने सर्व पूजा साहित्यावर शिंपडावे. नंतर आपल्यावर शिंपडावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s07-06",
+          "title": "कलश स्थापना",
+          "audioFile": "७ - साहित्य - ०६ कलश स्थापना.mp3",
+          "instruction": "चौरंगावर तांदूळ रचून त्यावर पूर्वी तयार केलेला कलश मांडणे. कलशात पाणी, गंध, फूल, अक्षता, दूर्वा, आंब्याचा टहाळा, सुपारी, व नाणी घालावी. कलशावर पूर्ण पत्र ठेऊन सुपाऱ्या मांडाव्या.",
+          "participation": "priest-only",
+          "duration_hint": 180,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s08",
+      "order": 8,
+      "originalNumber": 8,
+      "title": "दिक्पाल नवग्रह आवाहन",
+      "steps": [
+        {
+          "id": "s08-01",
+          "title": "दिक्पाल आवाहन",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०० अथ.mp3",
+          "instruction": "हातात अक्षता घेऊन एकेका सुपारीवर आवाहनासाठी वाहाव्यात",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-02",
+          "title": "इन्द्र",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०१ इन्द्र.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-03",
+          "title": "अग्नि",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०२ अग्नि.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-04",
+          "title": "यम",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०३ यम.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-05",
+          "title": "निऋति",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०४ निऋति.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-06",
+          "title": "वरुण",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०५ वरुण.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-07",
+          "title": "वायु",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०६ वायव्य.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-08",
+          "title": "कुबेर",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०७ सोम.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-09",
+          "title": "सोम",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०८ ईशान.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-10",
+          "title": "नवग्रह आवाहन",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ०९ पूर्ण.mp3",
+          "instruction": "नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-11",
+          "title": "सूर्य",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १० सूर्य.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-12",
+          "title": "सोम",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - ११ सोम.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-13",
+          "title": "भौम",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १३ भौम.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-14",
+          "title": "बुध",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १४ बुध.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-15",
+          "title": "बृहस्पति",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १५ बृहस्पती.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-16",
+          "title": "शुक्र",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १६ शुक्र.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-17",
+          "title": "शनि",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १७ शनि.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-18",
+          "title": "राहू",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १८ राहू.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-19",
+          "title": "केतू",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - १९ केतू.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-20",
+          "title": "नवग्रह आवाहन पूर्ण",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - २० पूर्ण.mp3",
+          "instruction": "नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s08-21",
+          "title": "आवाहन पूर्ण",
+          "audioFile": "८ - दिक्पाल नवग्रह आवाहन - २१ सकल पूर्ण.mp3",
+          "instruction": "सर्व सुपाऱ्यांवर क्रमाक्रमाने गंध, फूल, हळद कुंकू वाहावे. धूप दीप दाखवून, दुधाचा नैवेद्य दाखवावा. नमस्कार करून उदक सोडावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s09",
+      "order": 9,
+      "originalNumber": 9,
+      "title": "सत्यनारायण आवाहन",
+      "steps": [
+        {
+          "id": "s09-01",
+          "title": "आवाहन",
+          "audioFile": "९ - सत्यनारायण - ०० आवाहन.mp3",
+          "instruction": "नमस्कार मुद्रा करावी",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-02",
+          "title": "ध्यान",
+          "audioFile": "९ - सत्यनारायण - ०१ ध्यान.mp3",
+          "instruction": "ध्यान करावे",
+          "participation": "priest-only",
+          "duration_hint": 60,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-03",
+          "title": "आवाहन",
+          "audioFile": "९ - सत्यनारायण - ०२ आवाहन.mp3",
+          "instruction": "बाळकृष्णाची मूर्ती असेल तर अक्षता वाहाव्यात. शालिग्राम असेल तर तुलसी पत्र वाहावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-04",
+          "title": "आसन",
+          "audioFile": "९ - सत्यनारायण - ०३ आसन.mp3",
+          "instruction": "देवाच्या आसनाच्या ठिकाणी अक्षता वाहाव्यात",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-05",
+          "title": "पाद्यम्",
+          "audioFile": "९ - सत्यनारायण - ०४ पाद्यम.mp3",
+          "instruction": "देवाच्या पायावर पळीने पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-06",
+          "title": "अर्घ्यम्",
+          "audioFile": "९ - सत्यनारायण - ०५ अर्घ्यम्.mp3",
+          "instruction": "पळी भर पाण्यात गंध अक्षत फूल घालून देवावर त्या पाण्याने अर्घ्य घालावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-07",
+          "title": "आचमनम्",
+          "audioFile": "९ - सत्यनारायण - ०६ आचमनम्.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीने पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-08",
+          "title": "स्नानम्",
+          "audioFile": "९ - सत्यनारायण - ०७ स्नानम्.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीने पाणी वाहावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-09",
+          "title": "पंचामृत स्नानम्",
+          "audioFile": "९ - सत्यनारायण - ०८ पंचामृत स्नानम.mp3",
+          "instruction": null,
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-10",
+          "title": "दूध",
+          "audioFile": "९ - सत्यनारायण - ०८ पंचामृत स्नानम - ०१ पय.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीने दूध वाहावे व नंतर साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 30,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-11",
+          "title": "दही",
+          "audioFile": "९ - सत्यनारायण - ०८ पंचामृत स्नानम - ०२ दधि.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीने दही वाहावे व नंतर साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 30,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-12",
+          "title": "तूप",
+          "audioFile": "९ - सत्यनारायण - ०८ पंचामृत स्नानम - ०३ घृत.mp3",
+          "instruction": "देवाच्या मस्तकावर फुलाने तूप वाहावे व नंतर साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 30,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-13",
+          "title": "मध",
+          "audioFile": "९ - सत्यनारायण - ०८ पंचामृत स्नानम - ०४ मधु.mp3",
+          "instruction": "देवाच्या मस्तकावर फुलाने मध वाहावे व नंतर साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 30,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-14",
+          "title": "साखर",
+          "audioFile": "९ - सत्यनारायण - ०८ पंचामृत स्नानम - ०५ साखर.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीने साखर वाहावी व नंतर साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 30,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-15",
+          "title": "गंध स्नानम्",
+          "audioFile": "९ - सत्यनारायण - ०९ गंधोदकस्नानम.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीत पाणी व गंध मिसळून घालावे व नंतर साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-16",
+          "title": "तुलसी, हळद, कुंकू, शेष पंचामृत नैवेद्यम",
+          "audioFile": "९ - सत्यनारायण - १० तुलसी, हळद, कुंकू, नैवेद्य.mp3",
+          "instruction": "देवाला गंध अक्षता तुलसीपत्र, हळद कुंकू वाहावे. उदबत्ती ओवाळावी, निरंजन ओवाळावे, शेष पंचामृतचा नैवेद्य दाखवावा.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-17",
+          "title": "उत्तरापोषणं, हस्तप्रक्षालनं, मुख प्रक्षालनं",
+          "audioFile": "९ - सत्यनारायण - ११ नमस्कार.mp3",
+          "instruction": "विडयाच्या दोन पानावर नाणी सुपारी ठेऊन त्यावर पळीने पाणी घालावे. तीन वेळा डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात पाणी सोडणे. मंत्रपुष्प म्हणून एक फूल व अक्षता वाहाव्यात. नमस्कार करावा.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s09-18",
+          "title": "निर्माल्य",
+          "audioFile": "९ - सत्यनारायण - १२ निर्माल्य.mp3",
+          "instruction": "देवावर वाहिलेली फुले काढून उत्तरेकडे ठेवावी आणि देवाला अभिषेकच्या ताम्हनात ठेवावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s10",
+      "order": 10,
+      "originalNumber": 10,
+      "title": "सत्यनारायण अभिषेक",
+      "steps": [
+        {
+          "id": "s10-01",
+          "title": "अभिषेक मंत्र",
+          "audioFile": null,
+          "instruction": "देवावर पळीने हळू हळू पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 900,
+          "skippable": false,
+          "mediaType": "video",
+          "videoFile": "https://www.youtube.com/watch?v=BrHGWFl4Wz4",
+          "shortVersion": {
+            "audioFile": "१० - सत्यनारायण - ०१ अभिषेक मंत्र.mp3",
+            "instruction": "देवावर पळीने हळू हळू पाणी घालावे."
+          }
+        },
+        {
+          "id": "s10-02",
+          "title": "शुद्धोदक स्नानम",
+          "audioFile": "१० - सत्यनारायण - ०२ शुद्धओदक स्नानम.mp3",
+          "instruction": "देवाच्या मस्तकावर पळीने साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s10-03",
+          "title": "मंगल स्नानम",
+          "audioFile": "१० - सत्यनारायण - ०३ मंगल स्नानम.mp3",
+          "instruction": "देवाच्या मस्तकावर शंखातील पाणी घालावे. देवाला सुवासिक तेल, अत्तर लावून गरम पाण्याने स्नान घालावे. नंतर पळीने साधे पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s10-04",
+          "title": "प्रतिष्ठा",
+          "audioFile": "१० - सत्यनारायण - ०४ प्रतिष्ठा.mp3",
+          "instruction": "नंतर देव वस्त्राने पुसून कलशावरील ताम्हनात ठेवावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s11",
+      "order": 11,
+      "originalNumber": 11,
+      "title": "सत्यनारायण पूजा",
+      "steps": [
+        {
+          "id": "s11-01",
+          "title": "वस्त्रम्",
+          "audioFile": "११ - सत्यनारायण पूजा - ०१ वस्त्र.mp3",
+          "instruction": "देवाला कपासाचे किंवा प्रत्यक्ष वस्त्र घालावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-02",
+          "title": "जानवे",
+          "audioFile": "११ - सत्यनारायण पूजा - ०२ जानवे.mp3",
+          "instruction": "देवाला जानवे घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-03",
+          "title": "गंध",
+          "audioFile": "११ - सत्यनारायण पूजा - ०३ गंध.mp3",
+          "instruction": "देवाला गंध लावावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-04",
+          "title": "अलंकार",
+          "audioFile": "११ - सत्यनारायण पूजा - ०४ अलंकार.mp3",
+          "instruction": "देवाला अक्षता वाहाव्या.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-05",
+          "title": "सौभाग्य द्रव्य",
+          "audioFile": "११ - सत्यनारायण पूजा - ०५ हळद कुंकू.mp3",
+          "instruction": "देवाला हळद कुंकू वाहावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-06",
+          "title": "काजळ",
+          "audioFile": "११ - सत्यनारायण पूजा - ०६ काजळ.mp3",
+          "instruction": "देवाला काजळ वाहावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-07",
+          "title": "शेंदूर",
+          "audioFile": "११ - सत्यनारायण पूजा - ०७ सिंदूर.mp3",
+          "instruction": "देवाला शेंदूर वाहवा.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-08",
+          "title": "मंगळसूत्र",
+          "audioFile": "११ - सत्यनारायण पूजा - ०८ मंगलसूत्र.mp3",
+          "instruction": "देवाला मंगळसूत्र वाहावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-09",
+          "title": "बांगड्या",
+          "audioFile": "११ - सत्यनारायण पूजा - ०९ बांगड्या.mp3",
+          "instruction": "देवाला बांगड्या वाहाव्यात.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-10",
+          "title": "सुवासिक द्रव्य",
+          "audioFile": "११ - सत्यनारायण पूजा - १० सुवासिक द्रव्य.mp3",
+          "instruction": "देवाला अष्टगंध अत्तर वगैरे सुगंधी द्रव्य वाहावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-11",
+          "title": "पुष्प",
+          "audioFile": "११ - सत्यनारायण पूजा - ११ फुले.mp3",
+          "instruction": "सत्यनारायणाला आवडणारी फुले - चमेली, मोगरी, केवडा, चाफा, बकुल, गुलाब, तुळस (खास प्रिय)",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-12",
+          "title": "तुलसी",
+          "audioFile": null,
+          "instruction": "देवाला १०८ तुलसी पत्र वाहावी",
+          "participation": "priest-only",
+          "duration_hint": 1800,
+          "skippable": true,
+          "mediaType": "video",
+          "videoFile": "https://www.youtube.com/watch?v=SHjcWy_tf6g"
+        },
+        {
+          "id": "s11-13",
+          "title": "धूप",
+          "audioFile": "११ - सत्यनारायण पूजा - १२ धूप.mp3",
+          "instruction": "देवाला उदबत्तीने ओवाळावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-14",
+          "title": "दीप",
+          "audioFile": "११ - सत्यनारायण पूजा - १३ दीप.mp3",
+          "instruction": "देवाला तुपातील फूलवातीच्या निरंजनाने ओवाळावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-15",
+          "title": "नैवेद्य",
+          "audioFile": "११ - सत्यनारायण पूजा - १४ नैवेद्य.mp3",
+          "instruction": "चौकोनी मंडल करून त्यावर रव्याचा प्रसाद ठेऊन पळीभर पाणी हातात घेऊन दोन वेळा नैवेद्या भोवती फिरवावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-16",
+          "title": "नैवेद्य",
+          "audioFile": "११ - सत्यनारायण पूजा - १४ नैवेद्य_२.mp3",
+          "instruction": "पुनः नैवेद्य दाखवावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-17",
+          "title": "उत्तरापोषणं, हस्तप्रक्षालनं, मुख प्रक्षालनं, चंदन",
+          "audioFile": "११ - सत्यनारायण पूजा - १५ गंध.mp3",
+          "instruction": "तीन वेळा डाव्या हातात पळीने पाणी घेऊन उजव्या हातावरून ताम्हनात सोडणे. देवाला करांगुलीच्या अलीकडील बोटाने चंदन लावावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-18",
+          "title": "तांबूल",
+          "audioFile": "११ - सत्यनारायण पूजा - १६ तांबूल.mp3",
+          "instruction": "विडयाच्या दोन पानावर नाणी सुपारी ठेऊन त्यावर पळीने पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-19",
+          "title": "फळे",
+          "audioFile": "११ - सत्यनारायण पूजा - १७ नारळ फळे.mp3",
+          "instruction": "देवापुढे नारळ कुंकू लावून ठेवावा. केळे, पेरू. संत्रे, सफरचंद इत्यादी फळे ठेवून त्यावर पाणी सोडावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-20",
+          "title": "महादक्षिणा",
+          "audioFile": "११ - सत्यनारायण पूजा - १८ दक्षिणा.mp3",
+          "instruction": "विडयाच्या दोन पानावर नाणी सुपारी ठेऊन त्यावर पळीने पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-21",
+          "title": "महानिरांजन",
+          "audioFile": "११ - सत्यनारायण पूजा - १९ निरांजन.mp3",
+          "instruction": "देवाला तुपातील फूलवातीच्या निरंजनाने ओवाळावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-22",
+          "title": "कापूर",
+          "audioFile": "११ - सत्यनारायण पूजा - २० कापूर.mp3",
+          "instruction": "देवाला कापूर लावून ओवाळावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-23",
+          "title": "प्रदक्षिणा",
+          "audioFile": "११ - सत्यनारायण पूजा - २१ प्रदक्षिणा.mp3",
+          "instruction": "आपल्याभोवती उजवीकडून डावीकडे वाटोळे फिरावे.",
+          "participation": "family-joins",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-24",
+          "title": "साष्टांग नमस्कार",
+          "audioFile": "११ - सत्यनारायण पूजा - २२ सांष्टांग नमस्कार.mp3",
+          "instruction": "देवापुढे किंचित उजव्याबाजूला सरून साष्टांग नमस्कार घालावा.",
+          "participation": "family-joins",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-25",
+          "title": "मंत्रपुष्प",
+          "audioFile": "११ - सत्यनारायण पूजा - २३ मंत्रपुष्प.mp3",
+          "instruction": "देवाला मंत्रपुष्प - फुले व अक्षता वाहाव्यात.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-26",
+          "title": "प्रार्थना",
+          "audioFile": "११ - सत्यनारायण पूजा - २४ प्रार्थना.mp3",
+          "instruction": "नमस्कार मुद्रा करावी.",
+          "participation": "family-joins",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s11-27",
+          "title": "समर्पण",
+          "audioFile": "११ - सत्यनारायण पूजा - २५ समर्पण.mp3",
+          "instruction": "ताम्हनात उदक सोडावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s12",
+      "order": 12,
+      "originalNumber": 12,
+      "title": "सरस्वती पूजा",
+      "steps": [
+        {
+          "id": "s12-01",
+          "title": "ध्यान",
+          "audioFile": "१२ - सरस्वती पूजा - ०० आचमन.mp3",
+          "instruction": "नमस्कार मुद्रा करावी",
+          "participation": "priest-only",
+          "duration_hint": 60,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-02",
+          "title": "संकल्प",
+          "audioFile": "१२ - सरस्वती पूजा - ०१ संकल्प.mp3",
+          "instruction": "ताम्हनात उदक सोडावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-03",
+          "title": "पूजन",
+          "audioFile": "१२ - सरस्वती पूजा - ०२ पूजन.mp3",
+          "instruction": "पोथीवर गंध, अक्षता, फुले वाहावीत",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-04",
+          "title": "हळद कुंकू",
+          "audioFile": "१२ - सरस्वती पूजा - ०३ हळद कुंकू.mp3",
+          "instruction": "पोथीवर हळद कुंकू बुक्का वाहवा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-05",
+          "title": "धूप, दीप",
+          "audioFile": "१२ - सरस्वती पूजा - ०४ धूप दीप.mp3",
+          "instruction": "पोथीला उदबत्ती निरांजन ओवाळून साखरेचा नैवेद्य दाखवावा.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-06",
+          "title": "दक्षिणा",
+          "audioFile": "१२ - सरस्वती पूजा - ०५ दक्षिणा.mp3",
+          "instruction": "विडयाच्या दोन पानावर नाणी सुपारी ठेऊन त्यावर पळीने पाणी घालावे.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-07",
+          "title": "फुले",
+          "audioFile": "१२ - सरस्वती पूजा - ०६ फुले.mp3",
+          "instruction": "देवाला मंत्रपुष्प - फुले व अक्षता वाहाव्यात.",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s12-08",
+          "title": "नमस्कार",
+          "audioFile": "१२ - सरस्वती पूजा - ०७ नमस्कार.mp3",
+          "instruction": "ताम्हनात उदक सोडावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s13",
+      "order": 13,
+      "originalNumber": 17,
+      "title": "सत्य नारायण कथा",
+      "steps": [
+        {
+          "id": "s13-01",
+          "title": "पहिला अध्याय",
+          "audioFile": null,
+          "instruction": "देवाला तुलसी पत्र वाहावे",
+          "participation": "family-joins",
+          "duration_hint": 420,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s13-02",
+          "title": "दूसरा अध्याय",
+          "audioFile": null,
+          "instruction": "देवाला तुलसी पत्र वाहावे",
+          "participation": "family-joins",
+          "duration_hint": 420,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s13-03",
+          "title": "तिसरा अध्याय",
+          "audioFile": null,
+          "instruction": "देवाला तुलसी पत्र वाहावे",
+          "participation": "family-joins",
+          "duration_hint": 420,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s13-04",
+          "title": "चौथा अध्याय",
+          "audioFile": null,
+          "instruction": "देवाला तुलसी पत्र वाहावे",
+          "participation": "family-joins",
+          "duration_hint": 420,
+          "skippable": false,
+          "mediaType": "text"
+        },
+        {
+          "id": "s13-05",
+          "title": "पाचवा अध्याय",
+          "audioFile": null,
+          "instruction": "देवाला तुलसी पत्र वाहावे",
+          "participation": "family-joins",
+          "duration_hint": 420,
+          "skippable": false,
+          "mediaType": "text"
+        }
+      ]
+    },
+    {
+      "id": "s14",
+      "order": 14,
+      "originalNumber": 16,
+      "title": "आरती",
+      "steps": [
+        {
+          "id": "s14-01",
+          "title": "आरती",
+          "audioFile": null,
+          "instruction": "सत्य नारायणची आरती गावून म्हणावी",
+          "participation": "all-together",
+          "duration_hint": 300,
+          "skippable": false,
+          "mediaType": "text"
+        }
+      ]
+    },
+    {
+      "id": "s15",
+      "order": 15,
+      "originalNumber": 14,
+      "title": "तीर्थ, प्रसाद",
+      "steps": [
+        {
+          "id": "s15-01",
+          "title": "तीर्थ",
+          "audioFile": "१४ - तीर्थ प्रसाद - ०२ तीर्थ.mp3",
+          "instruction": "तीन वेळ पळीभर तीर्थ उजव्या हाताच्या द्रोण मुद्रेत द्यावे",
+          "participation": "all-together",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s15-02",
+          "title": "प्रसाद",
+          "audioFile": "१४ - तीर्थ प्रसाद - ०३ प्रसाद.mp3",
+          "instruction": "उजव्या हातात प्रसाद द्यावा",
+          "participation": "all-together",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s16",
+      "order": 16,
+      "originalNumber": 13,
+      "title": "ब्राह्मण पूजा",
+      "steps": [
+        {
+          "id": "s16-01",
+          "title": "आसन",
+          "audioFile": "१३ - ब्राह्मण पूजा - ०१ आसन.mp3",
+          "instruction": "ब्राह्मणाच्या पाटावर उजवीकडे अक्षता वाहाव्यात",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": true,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s16-02",
+          "title": "पाद्यम",
+          "audioFile": "१३ - ब्राह्मण पूजा - ०२ पाद्यम्.mp3",
+          "instruction": "ब्राह्मणाच्या हातावर पळीभर पाणी घालावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": true,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s16-03",
+          "title": "अर्घ्यम्",
+          "audioFile": "१३ - ब्राह्मण पूजा - ०३ अर्घ्यम्.mp3",
+          "instruction": "ब्राह्मणाच्या हातावर गंध अक्षता मिश्रित पाणी घालावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": true,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s16-04",
+          "title": "आचमन",
+          "audioFile": "१३ - ब्राह्मण पूजा - ०४ आचमन.mp3",
+          "instruction": "ब्राह्मणाच्या हातावर पळीभर पाणी घालावे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": true,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s16-05",
+          "title": "दक्षिणा",
+          "audioFile": "१३ - ब्राह्मण पूजा - ०५ दक्षिणा.mp3",
+          "instruction": "गंध, अक्षता, फुले, तुलसीपत्र, विडा सुपारी नाणे दक्षिणा ब्राह्मणाच्या हातावर द्यावी. मस्तकावर अक्षता वाहून नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": true,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s16-06",
+          "title": "अर्चना",
+          "audioFile": "१४ - तीर्थ प्रसाद - ०१ अर्चना.mp3",
+          "instruction": "नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": true,
+          "mediaType": "audio"
+        }
+      ]
+    },
+    {
+      "id": "s17",
+      "order": 17,
+      "originalNumber": 15,
+      "title": "उत्तर पूजा",
+      "steps": [
+        {
+          "id": "s17-01",
+          "title": "आचमन",
+          "audioFile": "१५ - उत्तरपूजा - ०१ आचमन.mp3",
+          "instruction": "तीन वेळा आचमन करणे, चौथे उजव्या हातावरून पाणी सोडणे",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s17-02",
+          "title": "पूजन",
+          "audioFile": "१५ - उत्तरपूजा - ०२ पूजा.mp3",
+          "instruction": "सत्य नारायणला गंध फुले तुलसी अक्षता हळद कुंकू वाहावीत",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        },
+        {
+          "id": "s17-03",
+          "title": "धूप, दीप, नैवेद्य",
+          "audioFile": "१५ - उत्तरपूजा - ०३ धूप दीप नैवेद्य.mp3",
+          "instruction": "धूप दीप ओवाळावे, नैवेद्य दाखवावा. नमस्कार करावा",
+          "participation": "priest-only",
+          "duration_hint": 45,
+          "skippable": false,
+          "mediaType": "audio"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Devanagari:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Noto Devanagari', sans-serif;
+  background-color: #F9F6F0;
+  color: #1a1a1a;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+input, textarea, button, select {
+  font-family: 'Noto Devanagari', sans-serif;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+  border-color: #D4A574 !important;
+  box-shadow: 0 0 0 2px rgba(212, 165, 116, 0.1);
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:active {
+  transform: scale(0.98);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F5E6D3;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D4A574;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8B4513;
+}
+
+/* Audio player styling */
+audio {
+  border-radius: 6px;
+}
+
+audio::-webkit-media-controls-panel {
+  background-color: #F5E6D3;
+}
+
+audio::-webkit-media-controls-current-time-display,
+audio::-webkit-media-controls-time-remaining-display {
+  color: #8B4513;
+}
+
+/* Prevent zoom on input focus for iOS */
+@supports (padding: max(0px)) {
+  input, textarea, select {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
