@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PreflightForm from './components/PreflightForm';
 import PujaScreen from './components/PujaScreen';
 import { designSystem } from './styles/designSystem';
-import { createRoomSync, generateRoomCode } from './sync';
 
 function App() {
-  const [screen, setScreen] = useState('deviceMode');
+  const [screen, setScreen] = useState('preflightDate');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [vara, setVara] = useState('');
   const [panchangData, setPanchangData] = useState({
@@ -21,7 +20,7 @@ function App() {
     suryaRashi: 'कर्क',
     guruRashi: 'मिथुन',
   });
-  
+
   const [hostData, setHostData] = useState({
     hostMaleName: '',
     hostFemaleName: '',
@@ -30,16 +29,13 @@ function App() {
     hostMaleAspiration: '',
     hostFemaleAspiration: '',
   });
-  
+
   const [deviceMode, setDeviceMode] = useState('controller');
   const [currentSectionIdx, setCurrentSectionIdx] = useState(0);
   const [currentStepIdx, setCurrentStepIdx] = useState(0);
   const [pujaData, setPujaData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [roomCode, setRoomCode] = useState('');
-  const syncRef = useRef(null);
 
-  // वार गणना करा
   useEffect(() => {
     if (date) {
       const d = new Date(date);
@@ -49,7 +45,6 @@ function App() {
     }
   }, [date]);
 
-  // puja.json लोड करा
   useEffect(() => {
     fetch('/puja.json')
       .then(r => r.json())
@@ -63,30 +58,16 @@ function App() {
       });
   }, []);
 
-  const handleDateConfirm = () => {
-    setScreen('panchang');
-  };
-
-  const handlePanchangConfirm = () => {
-    setScreen('hostFamily');
-  };
-
-  const handleHostDataChange = (field, value) => {
-    setHostData({ ...hostData, [field]: value });
-  };
+  const handleDateConfirm = () => setScreen('panchang');
+  const handlePanchangConfirm = () => setScreen('hostFamily');
+  const handleHostDataChange = (field, value) => setHostData({ ...hostData, [field]: value });
 
   const addChild = () => {
-    setHostData({
-      ...hostData,
-      children: [...hostData.children, { name: '', aspiration: '' }],
-    });
+    setHostData({ ...hostData, children: [...hostData.children, { name: '', aspiration: '' }] });
   };
 
   const removeChild = (idx) => {
-    setHostData({
-      ...hostData,
-      children: hostData.children.filter((_, i) => i !== idx),
-    });
+    setHostData({ ...hostData, children: hostData.children.filter((_, i) => i !== idx) });
   };
 
   const updateChild = (idx, field, value) => {
@@ -95,32 +76,11 @@ function App() {
     setHostData({ ...hostData, children: newChildren });
   };
 
-  const handleHostFamilyConfirm = () => {
-    startPuja(generateRoomCode());
-  };
+  const handleHostFamilyConfirm = () => setScreen('deviceMode');
 
   const handleDeviceModeSelect = (mode) => {
     setDeviceMode(mode);
-    if (mode === 'controller') {
-      setScreen('preflightDate');
-    } else {
-      setScreen('roomCodeEntry');
-    }
-  };
-
-  const startPuja = (code) => {
-    setRoomCode(code);
     setScreen('mainPuja');
-
-    syncRef.current = createRoomSync({
-      roomCode: code,
-      onState: (data) => {
-        setCurrentSectionIdx(data.sectionIdx);
-        setCurrentStepIdx(data.stepIdx);
-      },
-    });
-
-    // Screen लॉक सक्षम करा (पूजा सुरू होतेय)
     if (document.documentElement.requestFullscreen) {
       document.documentElement.requestFullscreen().catch(err => {
         console.log('Fullscreen अक्षम:', err);
@@ -128,15 +88,11 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    if (screen === 'mainPuja' && deviceMode === 'controller' && syncRef.current) {
-      syncRef.current.sendState(currentSectionIdx, currentStepIdx);
-    }
-  }, [currentSectionIdx, currentStepIdx, screen, deviceMode]);
-
-  useEffect(() => () => {
-    syncRef.current?.close();
-  }, []);
+  // Accordion वरून थेट कुठल्याही पायरीवर उडी मारणे
+  const handleJumpTo = (sectionIdx, stepIdx) => {
+    setCurrentSectionIdx(sectionIdx);
+    setCurrentStepIdx(stepIdx);
+  };
 
   if (loading) {
     return (
@@ -154,22 +110,12 @@ function App() {
     );
   }
 
-  if (screen === 'deviceMode') {
-    return <PreflightForm.DeviceModeScreen onSelect={handleDeviceModeSelect} />;
-  }
-
-  if (screen === 'roomCodeEntry') {
-    return <PreflightForm.RoomCodeEntryScreen onConfirm={startPuja} />;
-  }
-
   if (screen === 'preflightDate') {
     return <PreflightForm.DateScreen date={date} setDate={setDate} vara={vara} onConfirm={handleDateConfirm} />;
   }
-
   if (screen === 'panchang') {
     return <PreflightForm.PanchangScreen panchangData={panchangData} setPanchangData={setPanchangData} onConfirm={handlePanchangConfirm} />;
   }
-
   if (screen === 'hostFamily') {
     return (
       <PreflightForm.HostFamilyScreen
@@ -182,15 +128,16 @@ function App() {
       />
     );
   }
+  if (screen === 'deviceMode') {
+    return <PreflightForm.DeviceModeScreen onSelect={handleDeviceModeSelect} />;
+  }
 
-  // मुख्य पूजा screen
   const currentSection = pujaData.sections[currentSectionIdx];
   const currentStep = currentSection?.steps[currentStepIdx];
 
   return (
     <PujaScreen
       deviceMode={deviceMode}
-      roomCode={roomCode}
       currentSection={currentSection}
       currentStep={currentStep}
       currentSectionIdx={currentSectionIdx}
@@ -215,6 +162,7 @@ function App() {
           setCurrentStepIdx(prevSection.steps.length - 1);
         }
       }}
+      onJumpTo={handleJumpTo}
     />
   );
 }

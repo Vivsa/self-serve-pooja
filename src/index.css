@@ -20,6 +20,10 @@ html, body {
   -webkit-user-select: none;
 }
 
+body {
+  overflow: hidden;
+}
+
 #root {
   width: 100%;
   height: 100%;
@@ -82,3 +86,46 @@ audio::-webkit-media-controls-time-remaining-display {
     font-size: 16px;
   }
 }
+
+/* ===== Orientation-responsive layout ===== */
+
+/* Portrait (फोन) — नियंत्रक पूर्ण रुंदी, drawer overlay म्हणून वर येतो (default behavior) */
+.puja-layout {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.puja-controller-column {
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+}
+
+/* Landscape (Surface Pro, tablet आडवे) — accordion कायमचा डावीकडे दिसतो, overlay नाही */
+@media (orientation: landscape) and (min-width: 768px) {
+  .puja-nav-drawer {
+    position: static !important;
+    width: 320px !important;
+    max-width: 320px !important;
+    box-shadow: none !important;
+    border-right: 1px solid #E0D5C8;
+    flex-shrink: 0;
+  }
+
+  .puja-nav-overlay {
+    display: none !important;
+  }
+
+  .puja-nav-toggle-button {
+    display: none !important;
+  }
+}
+
+/* Portrait (फोन उभे) — drawer overlay, टॉगल बटण दिसते */
+@media (orientation: portrait), (max-width: 767px) {
+  .puja-nav-drawer {
+    position: fixed !important;
+  }
+}
+
