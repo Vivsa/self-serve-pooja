@@ -31,6 +31,7 @@ const ControllerMode = ({
   sections,
   hostData,
   panchangData,
+  pujaCode,
   onNext,
   onPrev,
   onJumpTo,
@@ -109,6 +110,9 @@ const ControllerMode = ({
           <button onClick={() => setNavOpen(true)} className="puja-nav-toggle-button" style={styles.navToggleButton}>
             ☰ पायऱ्या
           </button>
+          {pujaCode && (
+            <span style={styles.codeBadge}>कोड: {pujaCode}</span>
+          )}
           <div style={{ flex: 1, height: '4px', background: designSystem.colors.secondary, borderRadius: '2px', overflow: 'hidden' }}>
             <div
               style={{
@@ -258,6 +262,7 @@ const PujaScreen = ({
   sections,
   hostData,
   panchangData,
+  pujaCode,
   onNext,
   onPrev,
   onJumpTo,
@@ -272,6 +277,7 @@ const PujaScreen = ({
         sections={sections}
         hostData={hostData}
         panchangData={panchangData}
+        pujaCode={pujaCode}
         onNext={onNext}
         onPrev={onPrev}
         onJumpTo={onJumpTo}
@@ -299,6 +305,15 @@ const styles = {
     border: `1px solid ${designSystem.colors.gold}`,
     borderRadius: '6px',
     cursor: 'pointer',
+    whiteSpace: 'nowrap',
+  },
+  codeBadge: {
+    fontSize: '12px',
+    fontWeight: '600',
+    color: designSystem.colors.ink,
+    background: designSystem.colors.saffron,
+    padding: '6px 10px',
+    borderRadius: '6px',
     whiteSpace: 'nowrap',
   },
   overlay: {
