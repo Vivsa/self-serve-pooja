@@ -125,7 +125,7 @@ const ControllerMode = ({
         </p>
       </div>
 
-      <div style={designSystem.controllerContent}>
+      <div className="puja-scrollable" style={designSystem.controllerContent}>
         <h2 style={{ ...designSystem.body, fontSize: '16px', fontWeight: '600', color: designSystem.colors.ink, margin: '0 0 12px 0' }}>
           {currentSection.title}
         </h2>

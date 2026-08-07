@@ -22,12 +22,26 @@ html, body {
 
 body {
   overflow: hidden;
+  overscroll-behavior: none;
 }
 
 #root {
   width: 100%;
   height: 100%;
 }
+
+/* आतील scrollable भागांना touch-scroll व्यवस्थित काम करावे यासाठी */
+.puja-layout,
+.puja-controller-column {
+  touch-action: pan-y;
+}
+
+.puja-scrollable {
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overflow-y: auto !important;
+}
+
 
 input, textarea, button, select {
   font-family: 'Noto Devanagari', sans-serif;

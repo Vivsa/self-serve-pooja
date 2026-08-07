@@ -33,7 +33,7 @@ const AccordionNav = ({
   };
 
   return (
-    <div style={styles.accordionContainer}>
+    <div className="puja-scrollable" style={styles.accordionContainer}>
       {sections.map((section, sIdx) => {
         const isOpen = openSections[section.id];
         const isActiveSection = sIdx === currentSectionIdx;
