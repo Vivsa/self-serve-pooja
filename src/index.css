@@ -36,10 +36,26 @@ body {
   touch-action: pan-y;
 }
 
+.puja-controller-column {
+  height: 100% !important;
+}
+
 .puja-scrollable {
   -webkit-overflow-scrolling: touch;
   touch-action: pan-y;
   overflow-y: auto !important;
+}
+
+/* मोबाईल browsers वर address-bar मुळे 100vh चुकीचा मोजला जातो;
+   जिथे dvh support आहे तिथे तो प्राधान्याने वापरणे */
+html, body, #root {
+  height: 100vh;
+  height: 100dvh;
+}
+
+.puja-full-height {
+  height: 100vh !important;
+  height: 100dvh !important;
 }
 
 

@@ -76,7 +76,7 @@ const ControllerMode = ({
   };
 
   return (
-    <div className="puja-layout">
+    <div className="puja-layout puja-full-height">
       {showNav && (
         <>
           {!isLandscapeWide && (
