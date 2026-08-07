@@ -105,7 +105,7 @@ const ControllerMode = ({
       )}
 
       <div className="puja-controller-column" style={{ ...designSystem.controllerContainer, position: 'relative' }}>
-      <div style={designSystem.controllerHeader}>
+      <div className="puja-sticky-top" style={designSystem.controllerHeader}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
           <button onClick={() => setNavOpen(true)} className="puja-nav-toggle-button" style={styles.navToggleButton}>
             ☰ पायऱ्या
@@ -194,7 +194,7 @@ const ControllerMode = ({
         )}
       </div>
 
-      <div style={{ display: 'flex', gap: '12px', padding: '16px', borderTop: `1px solid ${designSystem.colors.secondary}` }}>
+      <div className="puja-sticky-bottom" style={{ display: 'flex', gap: '12px', padding: '16px', borderTop: `1px solid ${designSystem.colors.secondary}` }}>
         <button onClick={onPrev} style={{ ...designSystem.button, flex: 1 }}>
           मागे
         </button>

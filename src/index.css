@@ -7,10 +7,7 @@
 }
 
 html, body {
-  margin: 0;
-  padding: 0;
   width: 100%;
-  height: 100%;
   font-family: 'Noto Devanagari', sans-serif;
   background-color: #F9F6F0;
   color: #1a1a1a;
@@ -20,44 +17,54 @@ html, body {
   -webkit-user-select: none;
 }
 
-body {
-  overflow: hidden;
-  overscroll-behavior: none;
+/* ===== डिफॉल्ट (फोन/पोर्ट्रेट): नैसर्गिक पेज-स्क्रोल ===== */
+/* हे मोबाईलवर सर्वात विश्वासार्ह पद्धत आहे — div-आतील custom scroll ऐवजी
+   संपूर्ण पेजच स्क्रोल होऊ देणे, जे प्रत्येक ब्राउझरवर नक्की काम करते. */
+html, body {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 #root {
   width: 100%;
-  height: 100%;
+  min-height: 100%;
 }
 
-/* आतील scrollable भागांना touch-scroll व्यवस्थित काम करावे यासाठी */
-.puja-layout,
+.puja-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100%;
+}
+
 .puja-controller-column {
-  touch-action: pan-y;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: auto !important;
+  min-height: 100vh;
+  min-height: 100dvh;
 }
 
-.puja-controller-column {
-  height: 100% !important;
+/* Header आणि Footer स्क्रोल करतानाही दिसत राहावेत यासाठी sticky */
+.puja-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #F9F6F0;
 }
 
-.puja-scrollable {
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  overflow-y: auto !important;
+.puja-sticky-bottom {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  background: #F9F6F0;
 }
-
-/* मोबाईल browsers वर address-bar मुळे 100vh चुकीचा मोजला जातो;
-   जिथे dvh support आहे तिथे तो प्राधान्याने वापरणे */
-html, body, #root {
-  height: 100vh;
-  height: 100dvh;
-}
-
-.puja-full-height {
-  height: 100vh !important;
-  height: 100dvh !important;
-}
-
 
 input, textarea, button, select {
   font-family: 'Noto Devanagari', sans-serif;
@@ -117,23 +124,34 @@ audio::-webkit-media-controls-time-remaining-display {
   }
 }
 
-/* ===== Orientation-responsive layout ===== */
-
-/* Portrait (फोन) — नियंत्रक पूर्ण रुंदी, drawer overlay म्हणून वर येतो (default behavior) */
-.puja-layout {
-  display: flex;
-  height: 100vh;
-  width: 100%;
-}
-
-.puja-controller-column {
-  flex: 1;
-  min-width: 0;
-  height: 100vh;
-}
-
-/* Landscape (Surface Pro, tablet आडवे) — accordion कायमचा डावीकडे दिसतो, overlay नाही */
+/* ===== Landscape (Surface Pro, tablet आडवे) ===== */
+/* इथे संपूर्ण स्क्रीन एकाच वेळी दिसावी अशी अपेक्षा असते —
+   त्यामुळे fixed-height layout आणि आतल्या भागांना स्वतंत्र scroll. */
 @media (orientation: landscape) and (min-width: 768px) {
+  html, body {
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .puja-layout {
+    flex-direction: row;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .puja-controller-column {
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden;
+  }
+
+  .puja-scrollable {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .puja-nav-drawer {
     position: static !important;
     width: 320px !important;
@@ -141,6 +159,8 @@ audio::-webkit-media-controls-time-remaining-display {
     box-shadow: none !important;
     border-right: 1px solid #E0D5C8;
     flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto;
   }
 
   .puja-nav-overlay {
@@ -158,4 +178,3 @@ audio::-webkit-media-controls-time-remaining-display {
     position: fixed !important;
   }
 }
-
