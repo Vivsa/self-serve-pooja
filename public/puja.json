@@ -942,7 +942,8 @@
           "duration_hint": 900,
           "skippable": false,
           "mediaType": "video",
-          "videoFile": "https://www.youtube.com/watch?v=BrHGWFl4Wz4",
+          "videoLink": "https://www.youtube.com/watch?v=BrHGWFl4Wz4",
+          "videoFile": "१० - सत्यनारायण - ०१ पुरुषसूक्त.mp4",
           "shortVersion": {
             "audioFile": "१० - सत्यनारायण - ०१ अभिषेक मंत्र.mp3",
             "instruction": "देवावर पळीने हळू हळू पाणी घालावे."
@@ -1105,7 +1106,8 @@
           "duration_hint": 1800,
           "skippable": true,
           "mediaType": "video",
-          "videoFile": "https://www.youtube.com/watch?v=SHjcWy_tf6g"
+          "videoFile": "११ - सत्यनारायण पूजा - ११ विष्णुसहस्त्रनाम.mp4",
+          "videoLink": "https://www.youtube.com/watch?v=SHjcWy_tf6g"
         },
         {
           "id": "s11-13",
