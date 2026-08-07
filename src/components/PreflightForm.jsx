@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { designSystem } from '../styles/designSystem';
+import { panchangOptions, panchangLabels } from '../panchangOptions';
 
 const DateScreen = ({ date, setDate, vara, onConfirm }) => (
   <div style={designSystem.container}>
@@ -28,22 +29,28 @@ const PanchangScreen = ({ panchangData, setPanchangData, onConfirm }) => (
   <div style={designSystem.container}>
     <h1 style={designSystem.heading}>पंचांग तपशील</h1>
     <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '24px' }}>
-      पुष्टी करा किंवा मातांकडून विचारून संपादित करा
+      यादीतून निवडा किंवा मातांकडून विचारून संपादित करा
     </p>
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
       {Object.entries(panchangData).map(([key, value]) => (
         <div key={key} style={designSystem.formGroup}>
           <label style={designSystem.label}>
-            {key.replace(/([A-Z])/g, ' $1').trim()}
+            {panchangLabels[key] || key}
           </label>
-          <input
-            type="text"
+          <select
             value={value}
             onChange={(e) =>
               setPanchangData({ ...panchangData, [key]: e.target.value })
             }
-            style={designSystem.input}
-          />
+            style={{ ...designSystem.input, cursor: 'pointer' }}
+          >
+            {!panchangOptions[key]?.includes(value) && value && (
+              <option value={value}>{value}</option>
+            )}
+            {(panchangOptions[key] || []).map((opt) => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
         </div>
       ))}
     </div>
@@ -172,41 +179,11 @@ const DeviceModeScreen = ({ onSelect }) => (
   </div>
 );
 
-const RoomCodeEntryScreen = ({ onConfirm }) => {
-  const [code, setCode] = useState('');
-  return (
-    <div style={designSystem.container}>
-      <h1 style={designSystem.heading}>रूम कोड टाका</h1>
-      <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '24px' }}>
-        नियंत्रक डिव्हाइसवर दाखवलेला कोड टाका
-      </p>
-      <div style={designSystem.formGroup}>
-        <input
-          type="text"
-          placeholder="उदा. AB3D"
-          value={code}
-          onChange={(e) => setCode(e.target.value.toUpperCase())}
-          style={{ ...designSystem.input, fontSize: '24px', textAlign: 'center', letterSpacing: '4px' }}
-          maxLength={4}
-        />
-      </div>
-      <button
-        onClick={() => onConfirm(code)}
-        disabled={code.trim().length !== 4}
-        style={{ ...designSystem.button, opacity: code.trim().length === 4 ? 1 : 0.5 }}
-      >
-        जोडा
-      </button>
-    </div>
-  );
-};
-
 const PreflightForm = {
   DateScreen,
   PanchangScreen,
   HostFamilyScreen,
   DeviceModeScreen,
-  RoomCodeEntryScreen,
 };
 
 export default PreflightForm;
