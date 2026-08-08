@@ -23,6 +23,63 @@ const SankalpaPauseCard = ({ hostData, panchangData }) => (
   </div>
 );
 
+// उरलेला अंदाजे वेळ तास-मिनिटांत काढणे
+function calcRemainingTime(sections, currentSectionIdx, currentStepIdx) {
+  let remainingSeconds = 0;
+  sections.forEach((section, sIdx) => {
+    section.steps.forEach((step, stIdx) => {
+      const isPast = sIdx < currentSectionIdx || (sIdx === currentSectionIdx && stIdx < currentStepIdx);
+      if (!isPast) {
+        remainingSeconds += step.duration_hint || 0;
+      }
+    });
+  });
+  const hours = Math.floor(remainingSeconds / 3600);
+  const minutes = Math.round((remainingSeconds % 3600) / 60);
+  if (hours > 0) return `${hours} तास ${minutes} मिनिटे`;
+  return `${minutes} मिनिटे`;
+}
+
+// यजमान+पंचांग यांचा एका ओळीचा सारांश
+function buildSummaryLine(hostData, panchangData) {
+  const names = [hostData.hostMaleName, hostData.hostFemaleName].filter(Boolean).join(' — ');
+  const panchang = [panchangData.tithi, panchangData.vara].filter(Boolean).join(', ');
+  return [names, panchang].filter(Boolean).join(' · ');
+}
+
+const SummaryBar = ({ hostData, panchangData, sections, currentSectionIdx, currentStepIdx, viewers, deviceMode }) => {
+  const [expanded, setExpanded] = useState(false);
+  const summaryLine = buildSummaryLine(hostData, panchangData);
+  const remainingTime = calcRemainingTime(sections, currentSectionIdx, currentStepIdx);
+
+  return (
+    <div style={styles.summaryBar}>
+      <div style={styles.summaryTop} onClick={() => setExpanded(!expanded)}>
+        <span style={styles.summaryText}>{summaryLine || 'यजमान माहिती'}</span>
+        <span style={styles.summaryChevron}>{expanded ? '▲' : '▼'}</span>
+      </div>
+      <div style={styles.summaryMeta}>
+        <span>⏱️ अंदाजे उरलेला वेळ: {remainingTime}</span>
+        {deviceMode === 'controller' && (
+          <span>🙏 दर्शक: {viewers?.length || 0}</span>
+        )}
+      </div>
+      {expanded && deviceMode === 'controller' && viewers && viewers.length > 0 && (
+        <div style={styles.viewersList}>
+          {viewers.map((v) => (
+            <span key={v.viewerId} style={styles.viewerChip}>{v.name}</span>
+          ))}
+        </div>
+      )}
+      {expanded && deviceMode === 'controller' && (!viewers || viewers.length === 0) && (
+        <p style={{ fontSize: '12px', color: designSystem.colors.secondary, margin: '8px 0 0 0' }}>
+          अजून कोणी दर्शक जोडलेले नाहीत.
+        </p>
+      )}
+    </div>
+  );
+};
+
 const ControllerMode = ({
   currentSection,
   currentStep,
@@ -32,6 +89,7 @@ const ControllerMode = ({
   hostData,
   panchangData,
   pujaCode,
+  viewers,
   onNext,
   onPrev,
   onJumpTo,
@@ -59,7 +117,6 @@ const ControllerMode = ({
     wakeLock();
   }, []);
 
-  // Surface Pro सारख्या आडव्या रुंद स्क्रीनवर accordion कायम उघडा ठेवणे
   useEffect(() => {
     const mq = window.matchMedia('(orientation: landscape) and (min-width: 768px)');
     const updateLayout = () => setIsLandscapeWide(mq.matches);
@@ -68,7 +125,6 @@ const ControllerMode = ({
     return () => mq.removeEventListener('change', updateLayout);
   }, []);
 
-  // landscape मध्ये accordion नेहमी दिसतो (state वर अवलंबून नाही), portrait मध्ये फक्त navOpen असेल तर
   const showNav = navOpen || isLandscapeWide;
 
   const handleJump = (sIdx, stIdx) => {
@@ -81,11 +137,7 @@ const ControllerMode = ({
       {showNav && (
         <>
           {!isLandscapeWide && (
-            <div
-              className="puja-nav-overlay"
-              style={styles.overlay}
-              onClick={() => setNavOpen(false)}
-            />
+            <div className="puja-nav-overlay" style={styles.overlay} onClick={() => setNavOpen(false)} />
           )}
           <div className="puja-nav-drawer" style={styles.drawer}>
             <div style={styles.drawerHeader}>
@@ -105,151 +157,156 @@ const ControllerMode = ({
       )}
 
       <div className="puja-controller-column" style={{ ...designSystem.controllerContainer, position: 'relative' }}>
-      <div className="puja-sticky-top" style={designSystem.controllerHeader}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-          <button onClick={() => setNavOpen(true)} className="puja-nav-toggle-button" style={styles.navToggleButton}>
-            ☰ पायऱ्या
-          </button>
-          {pujaCode && (
-            <span style={styles.codeBadge}>कोड: {pujaCode}</span>
-          )}
-          <div style={{ flex: 1, height: '4px', background: designSystem.colors.secondary, borderRadius: '2px', overflow: 'hidden' }}>
-            <div
-              style={{
-                width: `${progressPercent}%`,
-                height: '100%',
-                background: designSystem.colors.gold,
-                transition: 'width 0.3s',
-              }}
-            />
+        <div className="puja-sticky-top" style={designSystem.controllerHeader}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+            <button onClick={() => setNavOpen(true)} className="puja-nav-toggle-button" style={styles.navToggleButton}>
+              ☰ पायऱ्या
+            </button>
+            {pujaCode && <span style={styles.codeBadge}>कोड: {pujaCode}</span>}
+            <div style={{ flex: 1, height: '4px', background: designSystem.colors.secondary, borderRadius: '2px', overflow: 'hidden' }}>
+              <div
+                style={{
+                  width: `${progressPercent}%`,
+                  height: '100%',
+                  background: designSystem.colors.gold,
+                  transition: 'width 0.3s',
+                }}
+              />
+            </div>
           </div>
+          <p style={{ fontSize: '12px', color: designSystem.colors.secondary, margin: '0 0 8px 0' }}>
+            {completedSteps}/{totalSteps}
+          </p>
+          <SummaryBar
+            hostData={hostData}
+            panchangData={panchangData}
+            sections={sections}
+            currentSectionIdx={currentSectionIdx}
+            currentStepIdx={currentStepIdx}
+            viewers={viewers}
+            deviceMode="controller"
+          />
         </div>
-        <p style={{ fontSize: '12px', color: designSystem.colors.secondary, margin: 0 }}>
-          {completedSteps}/{totalSteps}
-        </p>
-      </div>
 
-      <div className="puja-scrollable" style={designSystem.controllerContent}>
-        <h2 style={{ ...designSystem.body, fontSize: '16px', fontWeight: '600', color: designSystem.colors.ink, margin: '0 0 12px 0' }}>
-          {currentSection.title}
-        </h2>
-        <p style={{ ...designSystem.body, fontSize: '24px', fontWeight: '500', color: '#1a1a1a', margin: '0 0 16px 0' }}>
-          {currentStep.title}
-        </p>
+        <div className="puja-scrollable" style={designSystem.controllerContent}>
+          <h2 style={{ ...designSystem.body, fontSize: '16px', fontWeight: '600', color: designSystem.colors.ink, margin: '0 0 12px 0' }}>
+            {currentSection.title}
+          </h2>
+          <p style={{ ...designSystem.body, fontSize: '24px', fontWeight: '500', color: '#1a1a1a', margin: '0 0 16px 0' }}>
+            {currentStep.title}
+          </p>
 
-        {currentStep.participation && (
-          <div style={{ fontSize: '14px', color: designSystem.colors.secondary, marginBottom: '16px', padding: '12px', background: '#FFF', borderRadius: '6px', borderLeft: `4px solid ${designSystem.colors.gold}` }}>
-            {currentStep.participation === 'priest-only' && '🕉️ पुजारी एकट'}
-            {currentStep.participation === 'family-joins' && '🙏 परिवार सहभागी'}
-            {currentStep.participation === 'all-together' && '🕉️🙏 सर्वांनी एकत्र'}
-          </div>
-        )}
+          {currentStep.participation && (
+            <div style={{ fontSize: '14px', color: designSystem.colors.secondary, marginBottom: '16px', padding: '12px', background: '#FFF', borderRadius: '6px', borderLeft: `4px solid ${designSystem.colors.gold}` }}>
+              {currentStep.participation === 'priest-only' && '🕉️ पुजारी एकट'}
+              {currentStep.participation === 'family-joins' && '🙏 परिवार सहभागी'}
+              {currentStep.participation === 'all-together' && '🕉️🙏 सर्वांनी एकत्र'}
+            </div>
+          )}
 
-        {isSankalpaPause && (
-          <SankalpaPauseCard hostData={hostData} panchangData={panchangData} />
-        )}
+          {isSankalpaPause && <SankalpaPauseCard hostData={hostData} panchangData={panchangData} />}
 
-        {currentStep.mediaType === 'audio' && currentStep.audioFile && (
-          <div style={{ marginBottom: '24px' }}>
-            <audio
-              key={currentStep.audioFile}
-              ref={audioRef}
-              src={`${AUDIO_BASE_URL}/${currentStep.audioFile}`}
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              onEnded={() => setIsPlaying(false)}
-              style={{ width: '100%', marginBottom: '12px' }}
-              controls
-              autoPlay
-            />
-            <p style={{ fontSize: '13px', color: designSystem.colors.secondary, margin: 0 }}>
-              अंदाज: {Math.ceil((currentStep.duration_hint || 0) / 60)} मिनिटे
-            </p>
-          </div>
-        )}
-
-        {currentStep.mediaType === 'video' && currentStep.videoFile && (
-          <div style={{ marginBottom: '24px' }}>
-            <video
-              key={currentStep.videoFile}
-              src={`${VIDEO_BASE_URL}/${currentStep.videoFile}`}
-              preload="metadata"
-              style={{ width: '100%', borderRadius: '6px' }}
-              controls
-            />
-          </div>
-        )}
-
-        {(currentStep.mediaType === 'text' || !currentStep.audioFile) && currentStep.mediaType !== 'video' && (
-          <div style={{ ...designSystem.cardContainer, padding: '16px', borderLeft: `4px solid ${designSystem.colors.gold}` }}>
-            <p style={{ ...designSystem.body, margin: '0 0 12px 0', lineHeight: '1.6' }}>
-              {currentStep.instruction}
-            </p>
-            {currentStep.mantraText && (
-              <p style={{ fontSize: '13px', color: designSystem.colors.secondary, margin: 0, lineHeight: '1.8', fontFamily: 'Noto Devanagari' }}>
-                {currentStep.mantraText}
+          {currentStep.mediaType === 'audio' && currentStep.audioFile && (
+            <div style={{ marginBottom: '24px' }}>
+              <audio
+                key={currentStep.audioFile}
+                ref={audioRef}
+                src={`${AUDIO_BASE_URL}/${currentStep.audioFile}`}
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onEnded={() => setIsPlaying(false)}
+                style={{ width: '100%', marginBottom: '12px' }}
+                controls
+                autoPlay
+              />
+              <p style={{ fontSize: '13px', color: designSystem.colors.secondary, margin: 0 }}>
+                अंदाज: {Math.ceil((currentStep.duration_hint || 0) / 60)} मिनिटे
               </p>
-            )}
-          </div>
-        )}
-      </div>
+            </div>
+          )}
 
-      <div className="puja-sticky-bottom" style={{ display: 'flex', gap: '12px', padding: '16px', borderTop: `1px solid ${designSystem.colors.secondary}` }}>
-        <button onClick={onPrev} style={{ ...designSystem.button, flex: 1 }}>
-          मागे
-        </button>
-        <button onClick={onNext} style={{ ...designSystem.button, flex: 1 }}>
-          पुढे
-        </button>
-      </div>
+          {currentStep.mediaType === 'video' && currentStep.videoFile && (
+            <div style={{ marginBottom: '24px' }}>
+              <video
+                key={currentStep.videoFile}
+                src={`${VIDEO_BASE_URL}/${currentStep.videoFile}`}
+                preload="metadata"
+                style={{ width: '100%', borderRadius: '6px' }}
+                controls
+              />
+            </div>
+          )}
+
+          {(currentStep.mediaType === 'text' || !currentStep.audioFile) && currentStep.mediaType !== 'video' && (
+            <div style={{ ...designSystem.cardContainer, padding: '16px', borderLeft: `4px solid ${designSystem.colors.gold}` }}>
+              <p style={{ ...designSystem.body, margin: '0 0 12px 0', lineHeight: '1.6' }}>{currentStep.instruction}</p>
+              {currentStep.mantraText && (
+                <p style={{ fontSize: '13px', color: designSystem.colors.secondary, margin: 0, lineHeight: '1.8', fontFamily: 'Noto Devanagari' }}>
+                  {currentStep.mantraText}
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="puja-sticky-bottom" style={{ display: 'flex', gap: '12px', padding: '16px', borderTop: `1px solid ${designSystem.colors.secondary}` }}>
+          <button onClick={onPrev} style={{ ...designSystem.button, flex: 1 }}>
+            मागे
+          </button>
+          <button onClick={onNext} style={{ ...designSystem.button, flex: 1 }}>
+            पुढे
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
-const AudienceMode = ({ currentSection, currentStep, hostData, panchangData }) => (
-  <div style={{
-    height: '100vh',
-    display: 'flex',
-    flexDirection: 'column',
-    background: '#1a1a1a',
-    color: '#FFF',
-    fontFamily: 'Noto Devanagari, sans-serif',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: '24px',
-    textAlign: 'center',
-  }}>
-    <h1 style={{ fontSize: '48px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 24px 0' }}>
-      {currentSection.title}
-    </h1>
-    <h2 style={{ fontSize: '36px', fontWeight: '500', color: '#FFF', margin: '0 0 24px 0' }}>
-      {currentStep.title}
-    </h2>
+const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx }) => (
+  <div
+    style={{
+      minHeight: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      background: '#1a1a1a',
+      color: '#FFF',
+      fontFamily: 'Noto Devanagari, sans-serif',
+    }}
+  >
+    <div style={styles.audienceSummaryBar}>
+      <span>{buildSummaryLine(hostData, panchangData)}</span>
+      <span>⏱️ {calcRemainingTime(sections, currentSectionIdx, currentStepIdx)}</span>
+    </div>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '24px', textAlign: 'center' }}>
+      <h1 style={{ fontSize: '48px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 24px 0' }}>
+        {currentSection.title}
+      </h1>
+      <h2 style={{ fontSize: '36px', fontWeight: '500', color: '#FFF', margin: '0 0 24px 0' }}>
+        {currentStep.title}
+      </h2>
 
-    {currentStep.mediaType === 'video' && currentStep.videoFile && (
-      <video
-        src={`${VIDEO_BASE_URL}/${currentStep.videoFile}`}
-        preload="metadata"
-        style={{ maxWidth: '90%', maxHeight: '60vh', borderRadius: '8px', marginBottom: '24px' }}
-        controls
-        autoPlay
-      />
-    )}
+      {currentStep.mediaType === 'video' && currentStep.videoFile && (
+        <video
+          src={`${VIDEO_BASE_URL}/${currentStep.videoFile}`}
+          preload="metadata"
+          style={{ maxWidth: '90%', maxHeight: '60vh', borderRadius: '8px', marginBottom: '24px' }}
+          controls
+          autoPlay
+        />
+      )}
 
-    {currentStep.participation && (
-      <div style={{ fontSize: '20px', color: designSystem.colors.gold, marginBottom: '24px' }}>
-        {currentStep.participation === 'priest-only' && 'पुजारी'}
-        {currentStep.participation === 'family-joins' && 'परिवार सहभागी'}
-        {currentStep.participation === 'all-together' && 'सर्वांनी एकत्र'}
-      </div>
-    )}
+      {currentStep.participation && (
+        <div style={{ fontSize: '20px', color: designSystem.colors.gold, marginBottom: '24px' }}>
+          {currentStep.participation === 'priest-only' && 'पुजारी'}
+          {currentStep.participation === 'family-joins' && 'परिवार सहभागी'}
+          {currentStep.participation === 'all-together' && 'सर्वांनी एकत्र'}
+        </div>
+      )}
 
-    {currentStep.instruction && (
-      <p style={{ fontSize: '18px', color: '#E0E0E0', lineHeight: '1.8', maxWidth: '600px' }}>
-        {currentStep.instruction}
-      </p>
-    )}
+      {currentStep.instruction && (
+        <p style={{ fontSize: '18px', color: '#E0E0E0', lineHeight: '1.8', maxWidth: '600px' }}>{currentStep.instruction}</p>
+      )}
+    </div>
   </div>
 );
 
@@ -262,7 +319,9 @@ const PujaScreen = ({
   sections,
   hostData,
   panchangData,
+  sankalpaText,
   pujaCode,
+  viewers,
   onNext,
   onPrev,
   onJumpTo,
@@ -278,6 +337,7 @@ const PujaScreen = ({
         hostData={hostData}
         panchangData={panchangData}
         pujaCode={pujaCode}
+        viewers={viewers}
         onNext={onNext}
         onPrev={onPrev}
         onJumpTo={onJumpTo}
@@ -291,6 +351,9 @@ const PujaScreen = ({
       currentStep={currentStep}
       hostData={hostData}
       panchangData={panchangData}
+      sections={sections}
+      currentSectionIdx={currentSectionIdx}
+      currentStepIdx={currentStepIdx}
     />
   );
 };
@@ -315,6 +378,59 @@ const styles = {
     padding: '6px 10px',
     borderRadius: '6px',
     whiteSpace: 'nowrap',
+  },
+  summaryBar: {
+    background: '#FFF',
+    borderRadius: '6px',
+    padding: '8px 12px',
+    border: `1px solid ${designSystem.colors.gold}`,
+  },
+  summaryTop: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
+  summaryText: {
+    fontSize: '13px',
+    fontWeight: '500',
+    color: designSystem.colors.ink,
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    whiteSpace: 'nowrap',
+  },
+  summaryChevron: {
+    fontSize: '10px',
+    color: designSystem.colors.secondary,
+    marginLeft: '8px',
+  },
+  summaryMeta: {
+    display: 'flex',
+    gap: '16px',
+    fontSize: '12px',
+    color: designSystem.colors.secondary,
+    marginTop: '4px',
+  },
+  viewersList: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '6px',
+    marginTop: '8px',
+  },
+  viewerChip: {
+    fontSize: '12px',
+    background: designSystem.colors.saffron,
+    color: designSystem.colors.ink,
+    padding: '4px 10px',
+    borderRadius: '12px',
+  },
+  audienceSummaryBar: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: '10px 16px',
+    background: '#000',
+    color: designSystem.colors.gold,
+    fontSize: '13px',
   },
   overlay: {
     position: 'fixed',

@@ -2,21 +2,142 @@ import React from 'react';
 import { designSystem } from '../styles/designSystem';
 import { panchangOptions, panchangLabels } from '../panchangOptions';
 
+// ===== १. प्रवेश-तपासणी: पूजा आधीच सुरू आहे का? =====
+const EntryCheckScreen = ({ onSelect }) => (
+  <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
+    <h1 style={{ ...designSystem.heading, fontSize: '32px' }}>🕉️ पूजेसाठी</h1>
+    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '32px' }}>
+      श्री सत्यनारायण पूजा मार्गदर्शक
+    </p>
+    <p style={{ ...designSystem.body, marginBottom: '24px', fontSize: '18px' }}>
+      पूजा आधीच सुरू आहे का?
+    </p>
+    <button onClick={() => onSelect(true)} style={{ ...designSystem.button, marginTop: 0, marginBottom: '12px' }}>
+      होय, माझ्याकडे कोड आहे
+    </button>
+    <button
+      onClick={() => onSelect(false)}
+      style={{ ...designSystem.button, marginTop: 0, background: '#FFF', color: designSystem.colors.ink, border: `2px solid ${designSystem.colors.gold}` }}
+    >
+      नाही, नवीन पूजा सुरू करा
+    </button>
+  </div>
+);
+
+// ===== २. भूमिका निवड: निर्देशक की दर्शक =====
+const RoleSelectScreen = ({ onSelect }) => (
+  <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
+    <h1 style={designSystem.heading}>आपली भूमिका निवडा</h1>
+    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '32px' }}>
+      आपण या पूजेत कसे सामील होणार?
+    </p>
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div
+        style={{ ...designSystem.cardContainer, padding: '24px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${designSystem.colors.gold}` }}
+        onClick={() => onSelect('controller')}
+      >
+        <h3 style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, fontSize: '18px', margin: '0 0 8px 0' }}>🎛️ निर्देशक</h3>
+        <p style={{ ...designSystem.body, color: designSystem.colors.secondary, margin: 0, fontSize: '14px' }}>मी पूजा सांगत आहे</p>
+      </div>
+      <div
+        style={{ ...designSystem.cardContainer, padding: '24px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${designSystem.colors.gold}` }}
+        onClick={() => onSelect('audience')}
+      >
+        <h3 style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, fontSize: '18px', margin: '0 0 8px 0' }}>🙏 दर्शक</h3>
+        <p style={{ ...designSystem.body, color: designSystem.colors.secondary, margin: 0, fontSize: '14px' }}>मी पूजेत सहभागी होत आहे</p>
+      </div>
+    </div>
+  </div>
+);
+
+// ===== ३. दर्शकाचे नाव =====
+const AudienceNameScreen = ({ viewerName, setViewerName, codeError, onSubmit }) => (
+  <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
+    <h1 style={designSystem.heading}>आपले नाव सांगा</h1>
+    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '24px' }}>
+      निर्देशकाला दर्शक-यादीत आपले नाव दिसेल
+    </p>
+    <input
+      type="text"
+      value={viewerName}
+      onChange={(e) => setViewerName(e.target.value)}
+      placeholder="आपले नाव"
+      style={{ ...designSystem.input, fontSize: '18px', textAlign: 'center', marginBottom: '16px' }}
+    />
+    {codeError && <p style={{ color: designSystem.colors.danger, fontSize: '14px', marginBottom: '16px' }}>{codeError}</p>}
+    <button onClick={onSubmit} style={designSystem.button}>
+      पुढे चला
+    </button>
+  </div>
+);
+
+// ===== ४. कोड टाकणे (निर्देशक-पुनःजोड आणि दर्शक दोघांसाठी वापरता येईल) =====
+const CodeEntryScreen = ({ title, subtitle, codeInput, setCodeInput, codeError, onSubmit }) => (
+  <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
+    <h1 style={designSystem.heading}>{title}</h1>
+    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '24px' }}>{subtitle}</p>
+    <input
+      type="text"
+      inputMode="numeric"
+      maxLength={4}
+      value={codeInput}
+      onChange={(e) => setCodeInput(e.target.value.replace(/\D/g, ''))}
+      style={{
+        ...designSystem.input,
+        fontSize: '36px',
+        textAlign: 'center',
+        letterSpacing: '12px',
+        marginBottom: '16px',
+      }}
+      placeholder="0000"
+    />
+    {codeError && <p style={{ color: designSystem.colors.danger, fontSize: '14px', marginBottom: '16px' }}>{codeError}</p>}
+    <button onClick={onSubmit} style={designSystem.button}>
+      जोडा
+    </button>
+  </div>
+);
+
+// ===== ५. नवीन पूजा — कोड सर्वप्रथम दाखवणे =====
+const NewPujaCodeScreen = ({ pujaCode, onConfirm }) => (
+  <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
+    <h1 style={designSystem.heading}>आपला पूजा-कोड</h1>
+    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '24px' }}>
+      हा कोड जपून ठेवा — दर्शकांना व इतर निर्देशक-डिव्हाइसला यानेच जोडता येईल
+    </p>
+    <div
+      style={{
+        fontSize: '56px',
+        fontWeight: '700',
+        letterSpacing: '8px',
+        color: designSystem.colors.ink,
+        background: designSystem.colors.saffron,
+        padding: '24px',
+        borderRadius: '12px',
+        marginBottom: '32px',
+      }}
+    >
+      {pujaCode}
+    </div>
+    <button onClick={onConfirm} style={designSystem.button}>
+      पुढे चला — दिनांक निवडा
+    </button>
+  </div>
+);
+
+// ===== ६. दिनांक =====
 const DateScreen = ({ date, setDate, vara, onConfirm }) => (
   <div style={designSystem.container}>
     <h1 style={designSystem.heading}>पूजा तारीख निवडा</h1>
     <div style={designSystem.formGroup}>
       <label style={designSystem.label}>तारीख</label>
-      <input
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-        style={designSystem.input}
-      />
+      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} style={designSystem.input} />
     </div>
     {vara && (
       <div style={{ background: designSystem.colors.saffron, padding: '12px', borderRadius: '6px', marginBottom: '24px' }}>
-        <p style={{ ...designSystem.body, margin: 0 }}>वार: <strong style={{ color: designSystem.colors.ink }}>{vara}</strong></p>
+        <p style={{ ...designSystem.body, margin: 0 }}>
+          वार: <strong style={{ color: designSystem.colors.ink }}>{vara}</strong>
+        </p>
       </div>
     )}
     <button onClick={onConfirm} style={designSystem.button}>
@@ -25,6 +146,7 @@ const DateScreen = ({ date, setDate, vara, onConfirm }) => (
   </div>
 );
 
+// ===== ७. पंचांग (dropdown) =====
 const PanchangScreen = ({ panchangData, setPanchangData, onConfirm }) => (
   <div style={designSystem.container}>
     <h1 style={designSystem.heading}>पंचांग तपशील</h1>
@@ -34,21 +156,17 @@ const PanchangScreen = ({ panchangData, setPanchangData, onConfirm }) => (
     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
       {Object.entries(panchangData).map(([key, value]) => (
         <div key={key} style={designSystem.formGroup}>
-          <label style={designSystem.label}>
-            {panchangLabels[key] || key}
-          </label>
+          <label style={designSystem.label}>{panchangLabels[key] || key}</label>
           <select
             value={value}
-            onChange={(e) =>
-              setPanchangData({ ...panchangData, [key]: e.target.value })
-            }
+            onChange={(e) => setPanchangData({ ...panchangData, [key]: e.target.value })}
             style={{ ...designSystem.input, cursor: 'pointer' }}
           >
-            {!panchangOptions[key]?.includes(value) && value && (
-              <option value={value}>{value}</option>
-            )}
+            {!panchangOptions[key]?.includes(value) && value && <option value={value}>{value}</option>}
             {(panchangOptions[key] || []).map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
+              <option key={opt} value={opt}>
+                {opt}
+              </option>
             ))}
           </select>
         </div>
@@ -60,17 +178,11 @@ const PanchangScreen = ({ panchangData, setPanchangData, onConfirm }) => (
   </div>
 );
 
-const HostFamilyScreen = ({
-  hostData,
-  onDataChange,
-  onAddChild,
-  onRemoveChild,
-  onUpdateChild,
-  onConfirm,
-}) => (
+// ===== ८. यजमान कुटुंब =====
+const HostFamilyScreen = ({ hostData, onDataChange, onAddChild, onRemoveChild, onUpdateChild, onConfirm }) => (
   <div style={designSystem.container}>
     <h1 style={designSystem.heading}>यजमान कुटुंब</h1>
-    
+
     <div style={designSystem.formGroup}>
       <label style={designSystem.label}>यजमान (पुरुष) नाव</label>
       <input
@@ -120,10 +232,7 @@ const HostFamilyScreen = ({
           onChange={(e) => onUpdateChild(idx, 'aspiration', e.target.value)}
           style={{ ...designSystem.input, minHeight: '60px', marginTop: '8px' }}
         />
-        <button
-          onClick={() => onRemoveChild(idx)}
-          style={{ ...designSystem.smallButton, background: designSystem.colors.danger, marginTop: '8px' }}
-        >
+        <button onClick={() => onRemoveChild(idx)} style={{ ...designSystem.smallButton, background: designSystem.colors.danger, marginTop: '8px' }}>
           हटवा
         </button>
       </div>
@@ -149,41 +258,54 @@ const HostFamilyScreen = ({
     />
 
     <button onClick={onConfirm} style={designSystem.button}>
-      पुढे चला
+      पुढे चला — संकल्प पाहा
     </button>
   </div>
 );
 
-const DeviceModeScreen = ({ onSelect }) => (
+// ===== ९. संकल्प पूर्वावलोकन — निर्देशक इथे वाचून यजमान कुटुंबाला ऐकवू शकतो =====
+const SankalpaPreviewScreen = ({ sankalpaText, pujaCode, onConfirm }) => (
   <div style={designSystem.container}>
-    <h1 style={designSystem.heading}>डिव्हाइस निवडा</h1>
-    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '24px' }}>
-      कुठे चालवायचे?
+    <h1 style={designSystem.heading}>संकल्प</h1>
+    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '16px' }}>
+      पूजा सुरू करण्यापूर्वी हा संकल्प यजमान कुटुंबाला वाचून दाखवा
     </p>
-    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '24px' }}>
-      <div 
-        style={{ ...designSystem.cardContainer, padding: '24px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${designSystem.colors.gold}` }}
-        onClick={() => onSelect('controller')}
-      >
-        <h3 style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, fontSize: '18px', margin: '0 0 8px 0' }}>नियंत्रक</h3>
-        <p style={{ ...designSystem.body, color: designSystem.colors.secondary, margin: 0, fontSize: '14px' }}>किमान UI, एक मुठी नियंत्रण</p>
-      </div>
-      <div 
-        style={{ ...designSystem.cardContainer, padding: '24px', cursor: 'pointer', textAlign: 'center', border: `2px solid ${designSystem.colors.gold}` }}
-        onClick={() => onSelect('audience')}
-      >
-        <h3 style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, fontSize: '18px', margin: '0 0 8px 0' }}>दर्शक</h3>
-        <p style={{ ...designSystem.body, color: designSystem.colors.secondary, margin: 0, fontSize: '14px' }}>मोठे पाठ, सुंदर प्रदर्शन</p>
-      </div>
+    <div
+      style={{
+        ...designSystem.cardContainer,
+        background: designSystem.colors.saffron,
+        border: `2px solid ${designSystem.colors.gold}`,
+        padding: '20px',
+        marginBottom: '24px',
+        fontFamily: 'Noto Devanagari, sans-serif',
+        fontSize: '16px',
+        lineHeight: '2',
+        color: designSystem.colors.ink,
+      }}
+    >
+      {sankalpaText}
     </div>
+    <div style={{ background: '#FFF', padding: '12px', borderRadius: '6px', marginBottom: '24px', textAlign: 'center' }}>
+      <p style={{ ...designSystem.body, margin: 0, fontSize: '13px', color: designSystem.colors.secondary }}>
+        पूजा कोड: <strong style={{ color: designSystem.colors.ink, fontSize: '16px' }}>{pujaCode}</strong>
+      </p>
+    </div>
+    <button onClick={onConfirm} style={designSystem.button}>
+      🕉️ पूजा सुरू करा
+    </button>
   </div>
 );
 
 const PreflightForm = {
+  EntryCheckScreen,
+  RoleSelectScreen,
+  AudienceNameScreen,
+  CodeEntryScreen,
+  NewPujaCodeScreen,
   DateScreen,
   PanchangScreen,
   HostFamilyScreen,
-  DeviceModeScreen,
+  SankalpaPreviewScreen,
 };
 
 export default PreflightForm;

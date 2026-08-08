@@ -1,7 +1,7 @@
 // functions/api/sync.js
-// नियंत्रक (Controller) आणि दर्शक (Audience) यांच्यातील सध्याची पायरी सिंक करण्यासाठी.
-// GET  /api/sync?code=1234           → सध्याची स्थिती वाचा
-// POST /api/sync  {code, sectionIdx, stepIdx} → नवीन स्थिती लिहा (फक्त नियंत्रक वापरतो)
+// नियंत्रक (Controller) आणि दर्शक (Audience) यांच्यातील संपूर्ण पूजा-स्थिती सिंक करण्यासाठी.
+// GET  /api/sync?code=1234  → सध्याची संपूर्ण स्थिती वाचा (पायरी + पंचांग + यजमान माहिती)
+// POST /api/sync            → नवीन स्थिती लिहा
 
 export async function onRequestGet(context) {
   const { request, env } = context;
@@ -40,7 +40,7 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { code, sectionIdx, stepIdx } = body;
+    const { code, sectionIdx, stepIdx, panchangData, hostData, updatedAt } = body;
 
     if (!code || sectionIdx === undefined || stepIdx === undefined) {
       return new Response(JSON.stringify({ error: 'अपुरी माहिती' }), {
@@ -49,15 +49,29 @@ export async function onRequestPost(context) {
       });
     }
 
+    // Out-of-order writes टाळण्यासाठी — जुनी (stale) request नवीन स्थिती overwrite करणार नाही
+    const existingRaw = await env.PUJA_SYNC.get(`puja:${code}`);
+    if (existingRaw) {
+      const existing = JSON.parse(existingRaw);
+      if (existing.updatedAt && updatedAt && updatedAt < existing.updatedAt) {
+        return new Response(existingRaw, {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        });
+      }
+    }
+
     const payload = JSON.stringify({
       found: true,
       sectionIdx,
       stepIdx,
-      updatedAt: Date.now(),
+      panchangData: panchangData || null,
+      hostData: hostData || null,
+      updatedAt: updatedAt || Date.now(),
     });
 
-    // 6 तासांनी आपोआप expire होईल (एक पूजा सत्रासाठी पुरेसे)
-    await env.PUJA_SYNC.put(`puja:${code}`, payload, { expirationTtl: 21600 });
+    // 12 तासांनी आपोआप expire होईल (एक पूजा सत्रासाठी पुरेसे, दुसऱ्या दिवशीच्या उत्तरपूजेसाठीही)
+    await env.PUJA_SYNC.put(`puja:${code}`, payload, { expirationTtl: 43200 });
 
     return new Response(payload, {
       status: 200,
