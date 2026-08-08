@@ -272,7 +272,6 @@ const ControllerMode = ({
 
           {currentStep.participation && (
             <div style={{ fontSize: '14px', color: designSystem.colors.secondary, marginBottom: '16px', padding: '12px', background: '#FFF', borderRadius: '6px', borderLeft: `4px solid ${designSystem.colors.gold}` }}>
-              {currentStep.participation === 'priest-only' && '🕉️ पुजारी एकट'}
               {currentStep.participation === 'family-joins' && '🙏 परिवार सहभागी'}
               {currentStep.participation === 'all-together' && '🕉️🙏 सर्वांनी एकत्र'}
             </div>
@@ -293,9 +292,6 @@ const ControllerMode = ({
                 controls
                 autoPlay
               />
-              <p style={{ fontSize: '13px', color: designSystem.colors.secondary, margin: 0 }}>
-                अंदाज: {Math.ceil((currentStep.duration_hint || 0) / 60)} मिनिटे
-              </p>
             </div>
           )}
 
@@ -366,7 +362,6 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
 
       {currentStep.participation && (
         <div style={{ fontSize: '20px', color: designSystem.colors.gold, marginBottom: '24px' }}>
-          {currentStep.participation === 'priest-only' && 'पुजारी'}
           {currentStep.participation === 'family-joins' && 'परिवार सहभागी'}
           {currentStep.participation === 'all-together' && 'सर्वांनी एकत्र'}
         </div>
