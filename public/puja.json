@@ -1107,7 +1107,8 @@
           "skippable": true,
           "mediaType": "video",
           "videoFile": "११ - सत्यनारायण पूजा - ११ विष्णुसहस्त्रनाम.mp4",
-          "videoLink": "https://www.youtube.com/watch?v=SHjcWy_tf6g"
+          "videoLink": "https://www.youtube.com/watch?v=SHjcWy_tf6g",
+          "videoStartSeconds": 8
         },
         {
           "id": "s11-13",

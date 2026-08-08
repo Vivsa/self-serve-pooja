@@ -5,6 +5,80 @@ import AccordionNav from './AccordionNav';
 const AUDIO_BASE_URL = 'https://pub-ab818d5a685640d2a45fa39c4f0b2a85.r2.dev';
 const VIDEO_BASE_URL = 'https://pub-2b949e8d261e43a1a336b83ec67443d4.r2.dev';
 
+// नियंत्रक/दर्शक दोन्हीसाठी वापरता येणारा video player — R2 (offline) किंवा YouTube निवडता येते,
+// आणि विशिष्ट सेकंदापासून सुरू करता येते (उदा. जाहिरात/परिचय टाळण्यासाठी)
+// पूर्ण YouTube URL (watch?v=... किंवा youtu.be/...) मधून फक्त video ID काढणे
+function extractYoutubeId(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+const VideoPlayer = ({ videoFile, videoLink, startSeconds = 0, style }) => {
+  const youtubeId = extractYoutubeId(videoLink);
+  const [source, setSource] = useState('r2'); // 'r2' किंवा 'youtube'
+  const videoRef = useRef(null);
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current && startSeconds) {
+      videoRef.current.currentTime = startSeconds;
+    }
+  };
+
+  return (
+    <div style={{ marginBottom: '24px' }}>
+      {youtubeId && (
+        <div style={styles.sourceToggle}>
+          <button
+            onClick={() => setSource('r2')}
+            style={{ ...styles.sourceButton, ...(source === 'r2' ? styles.sourceButtonActive : {}) }}
+          >
+            📱 माझ्या डिव्हाइसवरून (Offline)
+          </button>
+          <button
+            onClick={() => setSource('youtube')}
+            style={{ ...styles.sourceButton, ...(source === 'youtube' ? styles.sourceButtonActive : {}) }}
+          >
+            ▶️ YouTube वरून
+          </button>
+        </div>
+      )}
+
+      {source === 'r2' && videoFile && (
+        <video
+          key={videoFile}
+          ref={videoRef}
+          src={`${VIDEO_BASE_URL}/${videoFile}`}
+          preload="metadata"
+          onLoadedMetadata={handleLoadedMetadata}
+          style={{ width: '100%', borderRadius: '6px', ...style }}
+          controls
+          autoPlay
+        />
+      )}
+
+      {source === 'youtube' && youtubeId && (
+        <iframe
+          key={youtubeId}
+          width="100%"
+          height="315"
+          src={`https://www.youtube.com/embed/${youtubeId}?start=${startSeconds}&autoplay=1`}
+          title="YouTube video"
+          style={{ borderRadius: '6px', border: 'none', ...style }}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      )}
+
+      {source === 'r2' && !videoFile && (
+        <p style={{ fontSize: '13px', color: designSystem.colors.danger }}>
+          Offline व्हिडिओ अजून उपलब्ध नाही — YouTube वापरा.
+        </p>
+      )}
+    </div>
+  );
+};
+
 const SankalpaPauseCard = ({ hostData, panchangData }) => (
   <div style={{ ...designSystem.cardContainer, background: designSystem.colors.saffron, border: `2px solid ${designSystem.colors.gold}`, padding: '20px', marginBottom: '24px' }}>
     <p style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, textAlign: 'center', margin: '0 0 16px 0', fontSize: '16px' }}>🙏 कुटुंबाच्या इच्छा जाणून घ्या</p>
@@ -225,16 +299,12 @@ const ControllerMode = ({
             </div>
           )}
 
-          {currentStep.mediaType === 'video' && currentStep.videoFile && (
-            <div style={{ marginBottom: '24px' }}>
-              <video
-                key={currentStep.videoFile}
-                src={`${VIDEO_BASE_URL}/${currentStep.videoFile}`}
-                preload="metadata"
-                style={{ width: '100%', borderRadius: '6px' }}
-                controls
-              />
-            </div>
+          {currentStep.mediaType === 'video' && (
+            <VideoPlayer
+              videoFile={currentStep.videoFile}
+              videoLink={currentStep.videoLink}
+              startSeconds={currentStep.videoStartSeconds || 0}
+            />
           )}
 
           {(currentStep.mediaType === 'text' || !currentStep.audioFile) && currentStep.mediaType !== 'video' && (
@@ -285,13 +355,12 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
         {currentStep.title}
       </h2>
 
-      {currentStep.mediaType === 'video' && currentStep.videoFile && (
-        <video
-          src={`${VIDEO_BASE_URL}/${currentStep.videoFile}`}
-          preload="metadata"
-          style={{ maxWidth: '90%', maxHeight: '60vh', borderRadius: '8px', marginBottom: '24px' }}
-          controls
-          autoPlay
+      {currentStep.mediaType === 'video' && (
+        <VideoPlayer
+          videoFile={currentStep.videoFile}
+          videoLink={currentStep.videoLink}
+          startSeconds={currentStep.videoStartSeconds || 0}
+          style={{ maxWidth: '90%', maxHeight: '60vh' }}
         />
       )}
 
@@ -359,6 +428,28 @@ const PujaScreen = ({
 };
 
 const styles = {
+  sourceToggle: {
+    display: 'flex',
+    gap: '8px',
+    marginBottom: '10px',
+  },
+  sourceButton: {
+    flex: 1,
+    padding: '10px',
+    fontSize: '12px',
+    fontWeight: '500',
+    background: '#FFF',
+    color: designSystem.colors.secondary,
+    border: `1px solid ${designSystem.colors.gold}`,
+    borderRadius: '6px',
+    cursor: 'pointer',
+    fontFamily: 'Noto Devanagari, sans-serif',
+  },
+  sourceButtonActive: {
+    background: designSystem.colors.gold,
+    color: '#FFF',
+    fontWeight: '600',
+  },
   navToggleButton: {
     padding: '8px 14px',
     fontSize: '13px',
