@@ -8,13 +8,13 @@ function App() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [vara, setVara] = useState('');
   const [panchangData, setPanchangData] = useState({
-    samvatsara: 'विश्वावसु',
-    ayana: 'दक्षिणायने',
-    rutu: 'सौर वर्षा',
+    samvatsara: 'विश्वावसू',
+    ayana: 'दक्षिणायन',
+    rutu: 'वर्षा',
     masa: 'श्रावण',
-    paksha: 'शुक्ल',
+    paksha: 'शुक्ल पक्ष',
     tithi: 'द्वितीया',
-    vara: 'मंद',
+    vara: 'रविवार',
     nakshatra: 'आश्लेषा',
     chandraRashi: 'कर्क',
     suryaRashi: 'कर्क',
