@@ -14,17 +14,17 @@ function App() {
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [vara, setVara] = useState('');
   const [panchangData, setPanchangData] = useState({
-    samvatsara: 'विश्वावसू',
+    samvatsara: 'पराभव',
     ayana: 'दक्षिणायन',
     rutu: 'वर्षा',
-    masa: 'श्रावण',
-    paksha: 'शुक्ल पक्ष',
-    tithi: 'द्वितीया',
+    masa: 'आषाढ',
+    paksha: 'कृष्ण पक्ष',
+    tithi: 'दशमी',
     vara: 'रविवार',
-    nakshatra: 'आश्लेषा',
-    chandraRashi: 'कर्क',
+    nakshatra: 'रोहिणी',
+    chandraRashi: 'वृषभ',
     suryaRashi: 'कर्क',
-    guruRashi: 'मिथुन',
+    guruRashi: 'कर्क',
   });
 
   const [hostData, setHostData] = useState({

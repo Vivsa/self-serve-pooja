@@ -79,6 +79,36 @@ const VideoPlayer = ({ videoFile, videoLink, startSeconds = 0, style }) => {
   );
 };
 
+// संकल्प विभागात (s04) पूर्ण भरलेले संस्कृत संकल्प-वाक्य दाखवणारे कार्ड
+const SankalpaTextCard = ({ sankalpaText, variant = 'controller' }) => {
+  if (!sankalpaText) return null;
+  const isAudience = variant === 'audience';
+  return (
+    <div
+      style={
+        isAudience
+          ? styles.audienceSankalpaCard
+          : { ...designSystem.cardContainer, background: designSystem.colors.saffron, border: `2px solid ${designSystem.colors.gold}`, padding: '18px', marginBottom: '16px' }
+      }
+    >
+      {!isAudience && (
+        <p style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, margin: '0 0 12px 0', fontSize: '14px' }}>
+          📜 संकल्प
+        </p>
+      )}
+      <p
+        style={
+          isAudience
+            ? styles.audienceSankalpaText
+            : { fontSize: '14px', color: designSystem.colors.ink, lineHeight: '1.9', fontFamily: 'Noto Devanagari, sans-serif', margin: 0 }
+        }
+      >
+        {sankalpaText}
+      </p>
+    </div>
+  );
+};
+
 const SankalpaPauseCard = ({ hostData, panchangData }) => (
   <div style={{ ...designSystem.cardContainer, background: designSystem.colors.saffron, border: `2px solid ${designSystem.colors.gold}`, padding: '20px', marginBottom: '24px' }}>
     <p style={{ ...designSystem.body, fontWeight: '600', color: designSystem.colors.ink, textAlign: 'center', margin: '0 0 16px 0', fontSize: '16px' }}>🙏 कुटुंबाच्या इच्छा जाणून घ्या</p>
@@ -96,6 +126,46 @@ const SankalpaPauseCard = ({ hostData, panchangData }) => (
     </div>
   </div>
 );
+
+// नियंत्रक मोड — ऑडिओ/व्हिडिओच्या खाली मंत्र+अर्थ+कथा collapsible स्वरूपात
+const MantraAccordion = ({ mantraText, mantraMeaningInMarathi, kathaTitle, kathaText }) => {
+  const [open, setOpen] = useState(false);
+  if (!mantraText && !kathaText) return null;
+
+  return (
+    <div style={styles.mantraAccordion}>
+      <button onClick={() => setOpen(!open)} style={styles.mantraAccordionHeader}>
+        <span>📖 मंत्र, अर्थ{kathaText ? ' व कथा' : ''}</span>
+        <span>{open ? '▲' : '▼'}</span>
+      </button>
+      {open && (
+        <div style={styles.mantraAccordionBody}>
+          {mantraText && (
+            <p style={styles.accordionMantra}>{mantraText}</p>
+          )}
+          {mantraMeaningInMarathi && (
+            <p style={styles.accordionMeaning}>{mantraMeaningInMarathi}</p>
+          )}
+          {kathaTitle && <h4 style={styles.accordionKathaTitle}>{kathaTitle}</h4>}
+          {kathaText && <p style={styles.accordionKatha}>{kathaText}</p>}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// दर्शक मोड — मंत्र + सोपा मराठी अर्थ + कथा भक्तिभावाने दाखवणारा भाग
+const MantraDisplayForAudience = ({ mantraText, mantraMeaningInMarathi, kathaTitle, kathaText }) => {
+  if (!mantraText && !kathaText) return null;
+  return (
+    <div style={styles.audienceMantraWrap}>
+      {mantraText && <p style={styles.audienceMantra}>{mantraText}</p>}
+      {mantraMeaningInMarathi && <p style={styles.audienceMeaning}>{mantraMeaningInMarathi}</p>}
+      {kathaTitle && <h3 style={styles.audienceKathaTitle}>🪔 {kathaTitle}</h3>}
+      {kathaText && <p style={styles.audienceKatha}>{kathaText}</p>}
+    </div>
+  );
+};
 
 // उरलेला अंदाजे वेळ तास-मिनिटांत काढणे
 function calcRemainingTime(sections, currentSectionIdx, currentStepIdx) {
@@ -162,6 +232,7 @@ const ControllerMode = ({
   sections,
   hostData,
   panchangData,
+  sankalpaText,
   pujaCode,
   viewers,
   onNext,
@@ -177,6 +248,7 @@ const ControllerMode = ({
   const progressPercent = (completedSteps / totalSteps) * 100;
 
   const isSankalpaPause = currentStep?.isSankalpaPause === true;
+  const isSankalpaSection = currentSection?.id === 's04';
 
   useEffect(() => {
     const wakeLock = async () => {
@@ -277,6 +349,8 @@ const ControllerMode = ({
             </div>
           )}
 
+          {isSankalpaSection && <SankalpaTextCard sankalpaText={sankalpaText} variant="controller" />}
+
           {isSankalpaPause && <SankalpaPauseCard hostData={hostData} panchangData={panchangData} />}
 
           {currentStep.mediaType === 'audio' && currentStep.audioFile && (
@@ -303,16 +377,18 @@ const ControllerMode = ({
             />
           )}
 
-          {(currentStep.mediaType === 'text' || !currentStep.audioFile) && currentStep.mediaType !== 'video' && (
-            <div style={{ ...designSystem.cardContainer, padding: '16px', borderLeft: `4px solid ${designSystem.colors.gold}` }}>
-              <p style={{ ...designSystem.body, margin: '0 0 12px 0', lineHeight: '1.6' }}>{currentStep.instruction}</p>
-              {currentStep.mantraText && (
-                <p style={{ fontSize: '13px', color: designSystem.colors.secondary, margin: 0, lineHeight: '1.8', fontFamily: 'Noto Devanagari' }}>
-                  {currentStep.mantraText}
-                </p>
-              )}
+          {currentStep.instruction && (
+            <div style={{ ...designSystem.cardContainer, padding: '16px', borderLeft: `4px solid ${designSystem.colors.gold}`, marginBottom: '16px' }}>
+              <p style={{ ...designSystem.body, margin: 0, lineHeight: '1.6' }}>{currentStep.instruction}</p>
             </div>
           )}
+
+          <MantraAccordion
+            mantraText={currentStep.mantraText}
+            mantraMeaningInMarathi={currentStep.mantraMeaningInMarathi}
+            kathaTitle={currentStep.kathaTitle}
+            kathaText={currentStep.kathaText}
+          />
         </div>
 
         <div className="puja-sticky-bottom" style={{ display: 'flex', gap: '12px', padding: '16px', borderTop: `1px solid ${designSystem.colors.secondary}` }}>
@@ -328,8 +404,9 @@ const ControllerMode = ({
   );
 };
 
-const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx }) => (
+const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx, sankalpaText }) => (
   <div
+    className="puja-scrollable"
     style={{
       minHeight: '100vh',
       display: 'flex',
@@ -337,19 +414,22 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
       background: '#1a1a1a',
       color: '#FFF',
       fontFamily: 'Noto Devanagari, sans-serif',
+      overflowY: 'auto',
     }}
   >
     <div style={styles.audienceSummaryBar}>
       <span>{buildSummaryLine(hostData, panchangData)}</span>
       <span>⏱️ {calcRemainingTime(sections, currentSectionIdx, currentStepIdx)}</span>
     </div>
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '24px', textAlign: 'center' }}>
-      <h1 style={{ fontSize: '48px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 24px 0' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px', textAlign: 'center' }}>
+      <h1 style={{ fontSize: '36px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 12px 0' }}>
         {currentSection.title}
       </h1>
-      <h2 style={{ fontSize: '36px', fontWeight: '500', color: '#FFF', margin: '0 0 24px 0' }}>
+      <h2 style={{ fontSize: '26px', fontWeight: '500', color: '#FFF', margin: '0 0 20px 0' }}>
         {currentStep.title}
       </h2>
+
+      {currentSection?.id === 's04' && <SankalpaTextCard sankalpaText={sankalpaText} variant="audience" />}
 
       {currentStep.mediaType === 'video' && (
         <VideoPlayer
@@ -361,15 +441,22 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
       )}
 
       {currentStep.participation && (
-        <div style={{ fontSize: '20px', color: designSystem.colors.gold, marginBottom: '24px' }}>
+        <div style={{ fontSize: '18px', color: designSystem.colors.gold, marginBottom: '20px' }}>
           {currentStep.participation === 'family-joins' && 'परिवार सहभागी'}
           {currentStep.participation === 'all-together' && 'सर्वांनी एकत्र'}
         </div>
       )}
 
       {currentStep.instruction && (
-        <p style={{ fontSize: '18px', color: '#E0E0E0', lineHeight: '1.8', maxWidth: '600px' }}>{currentStep.instruction}</p>
+        <p style={{ fontSize: '17px', color: '#E0E0E0', lineHeight: '1.8', maxWidth: '640px', marginBottom: '8px' }}>{currentStep.instruction}</p>
       )}
+
+      <MantraDisplayForAudience
+        mantraText={currentStep.mantraText}
+        mantraMeaningInMarathi={currentStep.mantraMeaningInMarathi}
+        kathaTitle={currentStep.kathaTitle}
+        kathaText={currentStep.kathaText}
+      />
     </div>
   </div>
 );
@@ -400,6 +487,7 @@ const PujaScreen = ({
         sections={sections}
         hostData={hostData}
         panchangData={panchangData}
+        sankalpaText={sankalpaText}
         pujaCode={pujaCode}
         viewers={viewers}
         onNext={onNext}
@@ -415,6 +503,7 @@ const PujaScreen = ({
       currentStep={currentStep}
       hostData={hostData}
       panchangData={panchangData}
+      sankalpaText={sankalpaText}
       sections={sections}
       currentSectionIdx={currentSectionIdx}
       currentStepIdx={currentStepIdx}
@@ -423,6 +512,107 @@ const PujaScreen = ({
 };
 
 const styles = {
+  audienceSankalpaCard: {
+    maxWidth: '680px',
+    background: 'rgba(212, 165, 116, 0.12)',
+    border: `1px solid ${designSystem.colors.gold}`,
+    borderRadius: '10px',
+    padding: '20px',
+    marginBottom: '20px',
+  },
+  audienceSankalpaText: {
+    fontSize: '17px',
+    color: designSystem.colors.gold,
+    lineHeight: '2.1',
+    fontFamily: 'Noto Devanagari, sans-serif',
+    margin: 0,
+  },
+  // नियंत्रक — collapsible मंत्र/अर्थ/कथा पट्टी
+  mantraAccordion: {
+    background: '#FFF',
+    border: `1px solid ${designSystem.colors.gold}`,
+    borderRadius: '8px',
+    overflow: 'hidden',
+    marginBottom: '16px',
+  },
+  mantraAccordionHeader: {
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '12px 16px',
+    background: designSystem.colors.saffron,
+    border: 'none',
+    cursor: 'pointer',
+    fontSize: '14px',
+    fontWeight: '600',
+    color: designSystem.colors.ink,
+    fontFamily: 'Noto Devanagari, sans-serif',
+  },
+  mantraAccordionBody: {
+    padding: '16px',
+  },
+  accordionMantra: {
+    fontSize: '15px',
+    color: designSystem.colors.ink,
+    lineHeight: '1.9',
+    fontFamily: 'Noto Devanagari, sans-serif',
+    marginBottom: '12px',
+    fontWeight: '500',
+  },
+  accordionMeaning: {
+    fontSize: '14px',
+    color: designSystem.colors.secondary,
+    lineHeight: '1.8',
+    fontStyle: 'italic',
+    marginBottom: '12px',
+  },
+  accordionKathaTitle: {
+    fontSize: '15px',
+    color: designSystem.colors.ink,
+    margin: '12px 0 8px 0',
+  },
+  accordionKatha: {
+    fontSize: '14px',
+    color: '#444',
+    lineHeight: '1.9',
+    textAlign: 'left',
+  },
+  // दर्शक — भक्तिभावाने मंत्र/अर्थ/कथा दाखवणे
+  audienceMantraWrap: {
+    maxWidth: '680px',
+    marginTop: '16px',
+    paddingTop: '20px',
+    borderTop: `1px solid rgba(212, 165, 116, 0.3)`,
+  },
+  audienceMantra: {
+    fontSize: '19px',
+    color: designSystem.colors.gold,
+    lineHeight: '2',
+    fontFamily: 'Noto Devanagari, sans-serif',
+    fontWeight: '500',
+    marginBottom: '16px',
+  },
+  audienceMeaning: {
+    fontSize: '16px',
+    color: '#D9D9D9',
+    lineHeight: '1.9',
+    fontStyle: 'italic',
+    marginBottom: '16px',
+  },
+  audienceKathaTitle: {
+    fontSize: '20px',
+    color: designSystem.colors.gold,
+    margin: '20px 0 12px 0',
+  },
+  audienceKatha: {
+    fontSize: '16px',
+    color: '#E8E8E8',
+    lineHeight: '2',
+    textAlign: 'left',
+    marginBottom: '24px',
+  },
+
   sourceToggle: {
     display: 'flex',
     gap: '8px',
