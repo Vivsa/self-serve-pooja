@@ -2,29 +2,7 @@ import React from 'react';
 import { designSystem } from '../styles/designSystem';
 import { panchangOptions, panchangLabels } from '../panchangOptions';
 
-// ===== १. प्रवेश-तपासणी: पूजा आधीच सुरू आहे का? =====
-const EntryCheckScreen = ({ onSelect }) => (
-  <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
-    <h1 style={{ ...designSystem.heading, fontSize: '32px' }}>🕉️ पूजेसाठी</h1>
-    <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '32px' }}>
-      श्री सत्यनारायण पूजा मार्गदर्शक
-    </p>
-    <p style={{ ...designSystem.body, marginBottom: '24px', fontSize: '18px' }}>
-      पूजा आधीच सुरू आहे का?
-    </p>
-    <button onClick={() => onSelect(true)} style={{ ...designSystem.button, marginTop: 0, marginBottom: '12px' }}>
-      होय, माझ्याकडे कोड आहे
-    </button>
-    <button
-      onClick={() => onSelect(false)}
-      style={{ ...designSystem.button, marginTop: 0, background: '#FFF', color: designSystem.colors.ink, border: `2px solid ${designSystem.colors.gold}` }}
-    >
-      नाही, नवीन पूजा सुरू करा
-    </button>
-  </div>
-);
-
-// ===== २. भूमिका निवड: निर्देशक की दर्शक =====
+// ===== १. भूमिका निवड: निर्देशक की दर्शक =====
 const RoleSelectScreen = ({ onSelect }) => (
   <div style={{ ...designSystem.container, textAlign: 'center', paddingTop: '60px' }}>
     <h1 style={designSystem.heading}>आपली भूमिका निवडा</h1>
@@ -264,7 +242,7 @@ const HostFamilyScreen = ({ hostData, onDataChange, onAddChild, onRemoveChild, o
 );
 
 // ===== ९. संकल्प पूर्वावलोकन — निर्देशक इथे वाचून यजमान कुटुंबाला ऐकवू शकतो =====
-const SankalpaPreviewScreen = ({ sankalpaText, pujaCode, onConfirm }) => (
+const SankalpaPreviewScreen = ({ sankalpaText, pujaCode, saving, onStartNow, onSaveScheduled }) => (
   <div style={designSystem.container}>
     <h1 style={designSystem.heading}>संकल्प</h1>
     <p style={{ ...designSystem.body, color: designSystem.colors.secondary, marginBottom: '16px' }}>
@@ -290,14 +268,79 @@ const SankalpaPreviewScreen = ({ sankalpaText, pujaCode, onConfirm }) => (
         पूजा कोड: <strong style={{ color: designSystem.colors.ink, fontSize: '16px' }}>{pujaCode}</strong>
       </p>
     </div>
-    <button onClick={onConfirm} style={designSystem.button}>
-      🕉️ पूजा सुरू करा
+    <button onClick={onStartNow} disabled={saving} style={designSystem.button}>
+      🕉️ आत्ताच पूजा सुरू करा
+    </button>
+    <button
+      onClick={onSaveScheduled}
+      disabled={saving}
+      style={{ ...designSystem.button, background: '#FFF', color: designSystem.colors.ink, border: `2px solid ${designSystem.colors.gold}` }}
+    >
+      💾 माहिती जतन करून शेड्यूल करून ठेवा (नंतर सुरू करेन)
     </button>
   </div>
 );
 
+// ===== ९. पूजा समाप्ती =====
+const PujaClosedScreen = ({ pujaCode, deviceMode, onBackToDashboard }) => (
+  <div
+    style={{
+      minHeight: '100dvh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      background: '#1a1a1a',
+      color: '#FFF',
+      fontFamily: 'Noto Devanagari, sans-serif',
+      padding: '24px',
+    }}
+  >
+    <img
+      src="/satyanarayan-katha-outro.png"
+      alt="पूजा समाप्त"
+      style={{
+        width: '100%',
+        maxWidth: '640px',
+        borderRadius: '14px',
+        border: `2px solid ${designSystem.colors.gold}`,
+        boxShadow: '0 8px 28px rgba(0, 0, 0, 0.5)',
+        marginBottom: '28px',
+      }}
+    />
+    <h1 style={{ fontSize: '30px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 12px 0' }}>
+      🙏 पूजा समाप्त झाली
+    </h1>
+    <p style={{ fontSize: '17px', color: '#E0E0E0', margin: '0 0 24px 0' }}>
+      श्रीसत्यनारायणाच्या कृपेने पूजा सुफळ संपूर्ण झाली.
+    </p>
+    {pujaCode && (
+      <div
+        style={{
+          fontSize: '15px',
+          color: designSystem.colors.gold,
+          background: 'rgba(212, 165, 116, 0.12)',
+          border: `1px solid ${designSystem.colors.gold}`,
+          borderRadius: '8px',
+          padding: '10px 18px',
+        }}
+      >
+        पूजा कोड: <strong>{pujaCode}</strong> — <span style={{ color: '#E0E0E0' }}>बंद (Closed)</span>
+      </div>
+    )}
+    {deviceMode === 'controller' && (
+      <button
+        onClick={onBackToDashboard}
+        style={{ ...designSystem.button, maxWidth: '360px', marginTop: '28px', background: designSystem.colors.gold }}
+      >
+        🕉️ पूजा-यादीकडे परत जा
+      </button>
+    )}
+  </div>
+);
+
 const PreflightForm = {
-  EntryCheckScreen,
   RoleSelectScreen,
   AudienceNameScreen,
   CodeEntryScreen,
@@ -306,6 +349,7 @@ const PreflightForm = {
   PanchangScreen,
   HostFamilyScreen,
   SankalpaPreviewScreen,
+  PujaClosedScreen,
 };
 
 export default PreflightForm;

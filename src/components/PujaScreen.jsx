@@ -5,6 +5,19 @@ import AccordionNav from './AccordionNav';
 const AUDIO_BASE_URL = 'https://pub-ab818d5a685640d2a45fa39c4f0b2a85.r2.dev';
 const VIDEO_BASE_URL = 'https://pub-2b949e8d261e43a1a336b83ec67443d4.r2.dev';
 
+// Desktop/TV सारखी रुंद-आडवी स्क्रीन आहे का — नियंत्रक व दर्शक दोन्ही मोडमध्ये वापरतो
+function useLandscapeWide() {
+  const [isLandscapeWide, setIsLandscapeWide] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(orientation: landscape) and (min-width: 768px)');
+    const updateLayout = () => setIsLandscapeWide(mq.matches);
+    updateLayout();
+    mq.addEventListener('change', updateLayout);
+    return () => mq.removeEventListener('change', updateLayout);
+  }, []);
+  return isLandscapeWide;
+}
+
 // नियंत्रक/दर्शक दोन्हीसाठी वापरता येणारा video player — R2 (offline) किंवा YouTube निवडता येते,
 // आणि विशिष्ट सेकंदापासून सुरू करता येते (उदा. जाहिरात/परिचय टाळण्यासाठी)
 // पूर्ण YouTube URL (watch?v=... किंवा youtu.be/...) मधून फक्त video ID काढणे
@@ -14,7 +27,7 @@ function extractYoutubeId(url) {
   return match ? match[1] : null;
 }
 
-const VideoPlayer = ({ videoFile, videoLink, startSeconds = 0, style }) => {
+const VideoPlayer = ({ videoFile, videoLink, videoIsLocal = false, startSeconds = 0, volume = 1, style }) => {
   const youtubeId = extractYoutubeId(videoLink);
   const [source, setSource] = useState('r2'); // 'r2' किंवा 'youtube'
   const videoRef = useRef(null);
@@ -24,6 +37,10 @@ const VideoPlayer = ({ videoFile, videoLink, startSeconds = 0, style }) => {
       videoRef.current.currentTime = startSeconds;
     }
   };
+
+  useEffect(() => {
+    if (videoRef.current) videoRef.current.volume = volume;
+  }, [volume, videoFile]);
 
   return (
     <div style={{ marginBottom: '24px' }}>
@@ -48,7 +65,7 @@ const VideoPlayer = ({ videoFile, videoLink, startSeconds = 0, style }) => {
         <video
           key={videoFile}
           ref={videoRef}
-          src={`${VIDEO_BASE_URL}/${videoFile}`}
+          src={videoIsLocal ? `/${videoFile}` : `${VIDEO_BASE_URL}/${videoFile}`}
           preload="metadata"
           onLoadedMetadata={handleLoadedMetadata}
           style={{ width: '100%', borderRadius: '6px', ...style }}
@@ -155,17 +172,31 @@ const MantraAccordion = ({ mantraText, mantraMeaningInMarathi, kathaTitle, katha
 };
 
 // दर्शक मोड — त्या पायरीचे चित्र सुंदरपणे दाखवणारा भाग (एक किंवा अनेक चित्रे, उदा. मोठ्या कथा-अध्यायांसाठी)
-const StepImage = ({ imageFile, imageFiles, alt }) => {
+const StepImage = ({ imageFile, imageFiles, alt, wide }) => {
   const files = imageFiles && imageFiles.length > 0 ? imageFiles : imageFile ? [imageFile] : [];
   if (files.length === 0) return null;
   return (
-    <div style={styles.audienceImageWrap}>
+    <div style={wide ? styles.audienceImageWrapWide : styles.audienceImageWrap}>
       {files.map((file) => (
         <img key={file} src={`/${file}`} alt={alt || ''} style={styles.audienceImage} loading="eager" />
       ))}
     </div>
   );
 };
+
+// दर्शक मोड — मोठ्या (desktop/TV) आडव्या स्क्रीनवर कथा-पायऱ्यांसाठी बाजू-बाजूला मांडणी:
+// डावीकडे मोठी चित्रे (स्वतंत्र स्क्रोल), उजवीकडे कथेचा मजकूर (स्वतंत्र स्क्रोल)
+const KathaSplitView = ({ currentStep }) => (
+  <div style={styles.kathaSplitWrap}>
+    <div style={styles.kathaSplitImages}>
+      <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} wide />
+    </div>
+    <div style={styles.kathaSplitText}>
+      {currentStep.kathaTitle && <h3 style={styles.audienceKathaTitle}>🪔 {currentStep.kathaTitle}</h3>}
+      {currentStep.kathaText && <p style={styles.audienceKatha}>{currentStep.kathaText}</p>}
+    </div>
+  </div>
+);
 
 // दर्शक मोड — मंत्र + सोपा मराठी अर्थ + कथा भक्तिभावाने दाखवणारा भाग
 const MantraDisplayForAudience = ({ mantraText, mantraMeaningInMarathi, kathaTitle, kathaText }) => {
@@ -237,6 +268,32 @@ const SummaryBar = ({ hostData, panchangData, sections, currentSectionIdx, curre
   );
 };
 
+// नियंत्रक — ऑडिओ/व्हिडिओ कुठे वाजेल (नियंत्रक/दर्शक) व आवाजाची पातळी नियंत्रित करणारा पट्टी, कोड-बॅजच्या शेजारी
+const VOLUME_LEVELS = [
+  { label: 'कमी', value: 0.35 },
+  { label: 'मध्यम', value: 0.65 },
+  { label: 'जास्त', value: 1 },
+];
+
+const MediaControls = ({ mediaTarget, volume, onToggleMediaTarget, onSetVolume }) => (
+  <div style={styles.mediaControls}>
+    <button onClick={onToggleMediaTarget} style={styles.mediaToggleButton} title="ऑडिओ/व्हिडिओ कुठे वाजवायचे ते बदला">
+      {mediaTarget === 'audience' ? '📺 दर्शकावर' : '🔊 नियंत्रकावर'}
+    </button>
+    <div style={styles.volumeGroup}>
+      {VOLUME_LEVELS.map((lvl) => (
+        <button
+          key={lvl.label}
+          onClick={() => onSetVolume(lvl.value)}
+          style={{ ...styles.volumeButton, ...(Math.abs(volume - lvl.value) < 0.01 ? styles.volumeButtonActive : {}) }}
+        >
+          {lvl.label}
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
 const ControllerMode = ({
   currentSection,
   currentStep,
@@ -248,6 +305,10 @@ const ControllerMode = ({
   sankalpaText,
   pujaCode,
   viewers,
+  mediaTarget = 'controller',
+  volume = 1,
+  onToggleMediaTarget,
+  onSetVolume,
   onNext,
   onPrev,
   onJumpTo,
@@ -255,7 +316,7 @@ const ControllerMode = ({
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
-  const [isLandscapeWide, setIsLandscapeWide] = useState(false);
+  const isLandscapeWide = useLandscapeWide();
   const totalSteps = sections.reduce((sum, s) => sum + s.steps.length, 0);
   const completedSteps = sections.slice(0, currentSectionIdx).reduce((sum, s) => sum + s.steps.length, 0) + currentStepIdx;
   const progressPercent = (completedSteps / totalSteps) * 100;
@@ -277,12 +338,8 @@ const ControllerMode = ({
   }, []);
 
   useEffect(() => {
-    const mq = window.matchMedia('(orientation: landscape) and (min-width: 768px)');
-    const updateLayout = () => setIsLandscapeWide(mq.matches);
-    updateLayout();
-    mq.addEventListener('change', updateLayout);
-    return () => mq.removeEventListener('change', updateLayout);
-  }, []);
+    if (audioRef.current) audioRef.current.volume = volume;
+  }, [volume, currentStep?.audioFile]);
 
   const showNav = navOpen || isLandscapeWide;
 
@@ -322,6 +379,9 @@ const ControllerMode = ({
               ☰ पायऱ्या
             </button>
             {pujaCode && <span style={styles.codeBadge}>कोड: {pujaCode}</span>}
+            {onToggleMediaTarget && (
+              <MediaControls mediaTarget={mediaTarget} volume={volume} onToggleMediaTarget={onToggleMediaTarget} onSetVolume={onSetVolume} />
+            )}
             <div style={{ flex: 1, height: '4px', background: designSystem.colors.secondary, borderRadius: '2px', overflow: 'hidden' }}>
               <div
                 style={{
@@ -366,7 +426,15 @@ const ControllerMode = ({
 
           {isSankalpaPause && <SankalpaPauseCard hostData={hostData} panchangData={panchangData} />}
 
-          {currentStep.mediaType === 'audio' && currentStep.audioFile && (
+          <div style={styles.controllerImageWrap}>
+            <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} />
+          </div>
+
+          {mediaTarget === 'audience' && (currentStep.mediaType === 'audio' || currentStep.mediaType === 'video') && (
+            <div style={styles.mediaOnAudienceNote}>📺 ऑडिओ/व्हिडिओ सध्या दर्शक-डिव्हाइसवर वाजत आहे</div>
+          )}
+
+          {mediaTarget === 'controller' && currentStep.mediaType === 'audio' && currentStep.audioFile && (
             <div style={{ marginBottom: '24px' }}>
               <audio
                 key={currentStep.audioFile}
@@ -382,11 +450,13 @@ const ControllerMode = ({
             </div>
           )}
 
-          {currentStep.mediaType === 'video' && (
+          {mediaTarget === 'controller' && currentStep.mediaType === 'video' && (
             <VideoPlayer
               videoFile={currentStep.videoFile}
               videoLink={currentStep.videoLink}
+              videoIsLocal={currentStep.videoIsLocal}
               startSeconds={currentStep.videoStartSeconds || 0}
+              volume={volume}
             />
           )}
 
@@ -417,55 +487,91 @@ const ControllerMode = ({
   );
 };
 
-const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx, sankalpaText }) => (
-  <div className="puja-layout">
-    <div className="puja-controller-column" style={{ background: '#1a1a1a', color: '#FFF', fontFamily: 'Noto Devanagari, sans-serif' }}>
-      <div style={styles.audienceSummaryBar}>
-        <span>{buildSummaryLine(hostData, panchangData)}</span>
-        <span>⏱️ {calcRemainingTime(sections, currentSectionIdx, currentStepIdx)}</span>
-      </div>
-      <div className="puja-scrollable" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px', textAlign: 'center' }}>
-        <h1 style={{ fontSize: '36px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 12px 0' }}>
-          {currentSection.title}
-        </h1>
-        <h2 style={{ fontSize: '26px', fontWeight: '500', color: '#FFF', margin: '0 0 20px 0' }}>
-          {currentStep.title}
-        </h2>
+const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx, sankalpaText, mediaTarget = 'controller', volume = 1 }) => {
+  const isLandscapeWide = useLandscapeWide();
+  const isKathaStep = Boolean(currentStep.kathaText);
+  const showKathaSplit = isKathaStep && isLandscapeWide;
+  const [audioUnlocked, setAudioUnlocked] = useState(false);
+  const playsHere = mediaTarget === 'audience';
+  const audienceAudioRef = useRef(null);
 
-        {currentSection?.id === 's04' && <SankalpaTextCard sankalpaText={sankalpaText} variant="audience" />}
+  useEffect(() => {
+    if (audienceAudioRef.current) audienceAudioRef.current.volume = volume;
+  }, [volume, currentStep?.audioFile]);
 
-        <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} />
-
-        {currentStep.mediaType === 'video' && (
-          <VideoPlayer
-            videoFile={currentStep.videoFile}
-            videoLink={currentStep.videoLink}
-            startSeconds={currentStep.videoStartSeconds || 0}
-            style={{ maxWidth: '90%', maxHeight: '60vh' }}
-          />
+  return (
+    <div className="puja-layout">
+      <div className="puja-controller-column" style={{ background: '#1a1a1a', color: '#FFF', fontFamily: 'Noto Devanagari, sans-serif', position: 'relative' }}>
+        {playsHere && !audioUnlocked && (
+          <button style={styles.audioUnlockOverlay} onClick={() => setAudioUnlocked(true)}>
+            🔊 आवाज सुरू करण्यासाठी येथे टॅप करा
+          </button>
         )}
+        <div style={styles.audienceSummaryBar}>
+          <span>{buildSummaryLine(hostData, panchangData)}</span>
+          <span>⏱️ {calcRemainingTime(sections, currentSectionIdx, currentStepIdx)}</span>
+        </div>
 
-        {currentStep.participation && (
-          <div style={{ fontSize: '18px', color: designSystem.colors.gold, marginBottom: '20px' }}>
-            {currentStep.participation === 'family-joins' && 'परिवार सहभागी'}
-            {currentStep.participation === 'all-together' && 'सर्वांनी एकत्र'}
+        {showKathaSplit ? (
+          <KathaSplitView currentStep={currentStep} />
+        ) : (
+          <div className="puja-scrollable" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px', textAlign: 'center' }}>
+            <h1 style={{ fontSize: '36px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 12px 0' }}>
+              {currentSection.title}
+            </h1>
+            <h2 style={{ fontSize: '26px', fontWeight: '500', color: '#FFF', margin: '0 0 20px 0' }}>
+              {currentStep.title}
+            </h2>
+
+            {currentSection?.id === 's04' && <SankalpaTextCard sankalpaText={sankalpaText} variant="audience" />}
+
+            <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} />
+
+            {playsHere && audioUnlocked && currentStep.mediaType === 'audio' && currentStep.audioFile && (
+              <audio
+                key={currentStep.audioFile}
+                ref={audienceAudioRef}
+                src={`${AUDIO_BASE_URL}/${currentStep.audioFile}`}
+                style={{ width: '100%', maxWidth: '640px', marginBottom: '20px' }}
+                controls
+                autoPlay
+              />
+            )}
+
+            {playsHere && audioUnlocked && currentStep.mediaType === 'video' && (
+              <VideoPlayer
+                videoFile={currentStep.videoFile}
+                videoLink={currentStep.videoLink}
+                videoIsLocal={currentStep.videoIsLocal}
+                startSeconds={currentStep.videoStartSeconds || 0}
+                volume={volume}
+                style={{ maxWidth: '90%', maxHeight: '60vh' }}
+              />
+            )}
+
+            {currentStep.participation && (
+              <div style={{ fontSize: '18px', color: designSystem.colors.gold, marginBottom: '20px' }}>
+                {currentStep.participation === 'family-joins' && 'परिवार सहभागी'}
+                {currentStep.participation === 'all-together' && 'सर्वांनी एकत्र'}
+              </div>
+            )}
+
+            {currentStep.instruction && (
+              <p style={{ fontSize: '17px', color: '#E0E0E0', lineHeight: '1.8', maxWidth: '640px', marginBottom: '8px' }}>{currentStep.instruction}</p>
+            )}
+
+            <MantraDisplayForAudience
+              mantraText={currentStep.mantraText}
+              mantraMeaningInMarathi={currentStep.mantraMeaningInMarathi}
+              kathaTitle={currentStep.kathaTitle}
+              kathaText={currentStep.kathaText}
+            />
           </div>
         )}
-
-        {currentStep.instruction && (
-          <p style={{ fontSize: '17px', color: '#E0E0E0', lineHeight: '1.8', maxWidth: '640px', marginBottom: '8px' }}>{currentStep.instruction}</p>
-        )}
-
-        <MantraDisplayForAudience
-          mantraText={currentStep.mantraText}
-          mantraMeaningInMarathi={currentStep.mantraMeaningInMarathi}
-          kathaTitle={currentStep.kathaTitle}
-          kathaText={currentStep.kathaText}
-        />
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const PujaScreen = ({
   deviceMode,
@@ -479,6 +585,10 @@ const PujaScreen = ({
   sankalpaText,
   pujaCode,
   viewers,
+  mediaTarget,
+  volume,
+  onToggleMediaTarget,
+  onSetVolume,
   onNext,
   onPrev,
   onJumpTo,
@@ -496,6 +606,10 @@ const PujaScreen = ({
         sankalpaText={sankalpaText}
         pujaCode={pujaCode}
         viewers={viewers}
+        mediaTarget={mediaTarget}
+        volume={volume}
+        onToggleMediaTarget={onToggleMediaTarget}
+        onSetVolume={onSetVolume}
         onNext={onNext}
         onPrev={onPrev}
         onJumpTo={onJumpTo}
@@ -513,6 +627,8 @@ const PujaScreen = ({
       sections={sections}
       currentSectionIdx={currentSectionIdx}
       currentStepIdx={currentStepIdx}
+      mediaTarget={mediaTarget}
+      volume={volume}
     />
   );
 };
@@ -601,6 +717,42 @@ const styles = {
     boxShadow: '0 8px 28px rgba(0, 0, 0, 0.5)',
     display: 'block',
   },
+  // नियंत्रक — पायरीचे चित्र, गडद पार्श्वभूमीशिवाय, थोडं लहान (नियंत्रणे वाचनासाठी जागा राहावी म्हणून)
+  controllerImageWrap: {
+    maxWidth: '420px',
+    margin: '0 0 20px 0',
+  },
+  audienceImageWrapWide: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+    width: '100%',
+  },
+  // दर्शक — desktop/TV वर कथा-पायऱ्यांसाठी बाजू-बाजूला मांडणी (चित्रे व मजकूर दोन्ही स्वतंत्रपणे स्क्रोल होतात)
+  kathaSplitWrap: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    overflow: 'hidden',
+    minHeight: 0,
+  },
+  kathaSplitImages: {
+    flex: '0 0 76%',
+    maxWidth: '76%',
+    height: '100%',
+    overflowY: 'auto',
+    padding: '24px',
+    boxSizing: 'border-box',
+    borderRight: '1px solid rgba(212, 165, 116, 0.25)',
+  },
+  kathaSplitText: {
+    flex: '1 1 24%',
+    height: '100%',
+    overflowY: 'auto',
+    padding: '24px 28px',
+    boxSizing: 'border-box',
+    textAlign: 'left',
+  },
   // दर्शक — भक्तिभावाने मंत्र/अर्थ/कथा दाखवणे
   audienceMantraWrap: {
     maxWidth: '680px',
@@ -677,6 +829,69 @@ const styles = {
     padding: '6px 10px',
     borderRadius: '6px',
     whiteSpace: 'nowrap',
+  },
+  mediaControls: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    flexWrap: 'wrap',
+  },
+  mediaToggleButton: {
+    fontSize: '12px',
+    fontWeight: '600',
+    color: designSystem.colors.ink,
+    background: '#FFF',
+    border: `1px solid ${designSystem.colors.gold}`,
+    borderRadius: '6px',
+    padding: '6px 10px',
+    cursor: 'pointer',
+    whiteSpace: 'nowrap',
+  },
+  volumeGroup: {
+    display: 'flex',
+    border: `1px solid ${designSystem.colors.gold}`,
+    borderRadius: '6px',
+    overflow: 'hidden',
+  },
+  volumeButton: {
+    fontSize: '11px',
+    fontWeight: '500',
+    color: designSystem.colors.ink,
+    background: '#FFF',
+    border: 'none',
+    padding: '6px 8px',
+    cursor: 'pointer',
+  },
+  volumeButtonActive: {
+    background: designSystem.colors.gold,
+    color: '#FFF',
+    fontWeight: '600',
+  },
+  mediaOnAudienceNote: {
+    fontSize: '13px',
+    color: designSystem.colors.secondary,
+    background: designSystem.colors.saffron,
+    borderRadius: '6px',
+    padding: '10px 14px',
+    marginBottom: '16px',
+  },
+  // दर्शक — पहिल्यांदा टॅप होईपर्यंत ऑडिओ/व्हिडिओ ब्राउझर आपोआप वाजवत नाही, त्यासाठी झाकण
+  audioUnlockOverlay: {
+    position: 'absolute',
+    inset: 0,
+    zIndex: 50,
+    background: 'rgba(0, 0, 0, 0.85)',
+    color: designSystem.colors.gold,
+    border: 'none',
+    fontSize: '20px',
+    fontWeight: '600',
+    fontFamily: 'Noto Devanagari, sans-serif',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    padding: '24px',
   },
   summaryBar: {
     background: '#FFF',

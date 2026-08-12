@@ -40,7 +40,7 @@ export async function onRequestPost(context) {
 
   try {
     const body = await request.json();
-    const { code, sectionIdx, stepIdx, panchangData, hostData, updatedAt } = body;
+    const { code, sectionIdx, stepIdx, panchangData, hostData, updatedAt, status, mediaTarget, volume } = body;
 
     if (!code || sectionIdx === undefined || stepIdx === undefined) {
       return new Response(JSON.stringify({ error: 'अपुरी माहिती' }), {
@@ -51,8 +51,9 @@ export async function onRequestPost(context) {
 
     // Out-of-order writes टाळण्यासाठी — जुनी (stale) request नवीन स्थिती overwrite करणार नाही
     const existingRaw = await env.PUJA_SYNC.get(`puja:${code}`);
+    let existing = null;
     if (existingRaw) {
-      const existing = JSON.parse(existingRaw);
+      existing = JSON.parse(existingRaw);
       if (existing.updatedAt && updatedAt && updatedAt < existing.updatedAt) {
         return new Response(existingRaw, {
           status: 200,
@@ -68,10 +69,27 @@ export async function onRequestPost(context) {
       panchangData: panchangData || null,
       hostData: hostData || null,
       updatedAt: updatedAt || Date.now(),
+      status: status || 'performing',
+      // ऑडिओ/व्हिडिओ कुठे वाजवायचे (नियंत्रक/दर्शक) व आवाजाची पातळी — न पाठवल्यास आधीचीच स्थिती कायम राहते
+      mediaTarget: mediaTarget !== undefined ? mediaTarget : (existing?.mediaTarget || 'controller'),
+      volume: volume !== undefined ? volume : (existing?.volume !== undefined ? existing.volume : 1),
     });
 
     // 12 तासांनी आपोआप expire होईल (एक पूजा सत्रासाठी पुरेसे, दुसऱ्या दिवशीच्या उत्तरपूजेसाठीही)
     await env.PUJA_SYNC.put(`puja:${code}`, payload, { expirationTtl: 43200 });
+
+    // कायमस्वरूपी पूजा-यादीत (D1) प्रगती/स्थिती प्रतिबिंबित करणे — best-effort, अपयश आले तरी सिंक थांबू नये
+    if (env.POOJAS_DB) {
+      try {
+        await env.POOJAS_DB.prepare(
+          `UPDATE poojas SET status=?, section_idx=?, step_idx=?, media_target=?, volume=?, updated_at=? WHERE code=?`
+        )
+          .bind(status || 'performing', sectionIdx, stepIdx, mediaTarget || 'controller', volume !== undefined ? volume : 1, Date.now(), code)
+          .run();
+      } catch (d1Err) {
+        // D1 अद्ययावत करता आले नाही तरी दर्शक-सिंक न अडखळता चालू राहावी
+      }
+    }
 
     return new Response(payload, {
       status: 200,
