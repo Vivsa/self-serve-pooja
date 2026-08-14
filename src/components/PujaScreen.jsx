@@ -172,15 +172,37 @@ const MantraAccordion = ({ mantraText, mantraMeaningInMarathi, kathaTitle, katha
 };
 
 // दर्शक मोड — त्या पायरीचे चित्र सुंदरपणे दाखवणारा भाग (एक किंवा अनेक चित्रे, उदा. मोठ्या कथा-अध्यायांसाठी)
-const StepImage = ({ imageFile, imageFiles, alt, wide }) => {
+// zoomable=true असल्यास (कथेची चित्रे — त्यात बारीक तपशील असतो) चित्रावर टॅप केल्यास ते पूर्ण-स्क्रीन मोठे दिसते
+const StepImage = ({ imageFile, imageFiles, alt, wide, zoomable, hintVariant = 'light' }) => {
   const files = imageFiles && imageFiles.length > 0 ? imageFiles : imageFile ? [imageFile] : [];
+  const [zoomedFile, setZoomedFile] = useState(null);
   if (files.length === 0) return null;
   return (
-    <div style={wide ? styles.audienceImageWrapWide : styles.audienceImageWrap}>
-      {files.map((file) => (
-        <img key={file} src={`/${file}`} alt={alt || ''} style={styles.audienceImage} loading="eager" />
-      ))}
-    </div>
+    <>
+      <div style={wide ? styles.audienceImageWrapWide : styles.audienceImageWrap}>
+        {files.map((file) => (
+          <img
+            key={file}
+            src={`/${file}`}
+            alt={alt || ''}
+            style={zoomable ? { ...styles.audienceImage, cursor: 'zoom-in' } : styles.audienceImage}
+            loading="eager"
+            onClick={zoomable ? () => setZoomedFile(file) : undefined}
+          />
+        ))}
+      </div>
+      {zoomable && (
+        <p style={hintVariant === 'dark' ? styles.zoomHintDark : styles.zoomHintLight}>
+          🔍 चित्र मोठे करून पाहण्यासाठी त्यावर टॅप करा
+        </p>
+      )}
+      {zoomedFile && (
+        <div style={styles.imageLightboxOverlay} onClick={() => setZoomedFile(null)}>
+          <img src={`/${zoomedFile}`} alt={alt || ''} style={styles.imageLightboxImg} onClick={(e) => e.stopPropagation()} />
+          <button style={styles.imageLightboxClose} onClick={() => setZoomedFile(null)} aria-label="बंद करा">✕</button>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -189,7 +211,7 @@ const StepImage = ({ imageFile, imageFiles, alt, wide }) => {
 const KathaSplitView = ({ currentStep }) => (
   <div style={styles.kathaSplitWrap}>
     <div style={styles.kathaSplitImages}>
-      <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} wide />
+      <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} wide zoomable hintVariant="dark" />
     </div>
     <div style={styles.kathaSplitText}>
       {currentStep.kathaTitle && <h3 style={styles.audienceKathaTitle}>🪔 {currentStep.kathaTitle}</h3>}
@@ -426,8 +448,15 @@ const ControllerMode = ({
 
           {isSankalpaPause && <SankalpaPauseCard hostData={hostData} panchangData={panchangData} />}
 
-          <div style={styles.controllerImageWrap}>
-            <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} />
+          <div style={currentStep.kathaText ? styles.controllerImageWrapKatha : styles.controllerImageWrap}>
+            <StepImage
+              imageFile={currentStep.imageFile}
+              imageFiles={currentStep.imageFiles}
+              alt={currentStep.title}
+              wide={Boolean(currentStep.kathaText)}
+              zoomable={Boolean(currentStep.kathaText)}
+              hintVariant="light"
+            />
           </div>
 
           {mediaTarget === 'audience' && (currentStep.mediaType === 'audio' || currentStep.mediaType === 'video') && (
@@ -525,7 +554,14 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
 
             {currentSection?.id === 's04' && <SankalpaTextCard sankalpaText={sankalpaText} variant="audience" />}
 
-            <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} />
+            <StepImage
+              imageFile={currentStep.imageFile}
+              imageFiles={currentStep.imageFiles}
+              alt={currentStep.title}
+              wide={isKathaStep}
+              zoomable={isKathaStep}
+              hintVariant="dark"
+            />
 
             {playsHere && audioUnlocked && currentStep.mediaType === 'audio' && currentStep.audioFile && (
               <audio
@@ -721,6 +757,56 @@ const styles = {
   controllerImageWrap: {
     maxWidth: '420px',
     margin: '0 0 20px 0',
+  },
+  // नियंत्रक — कथेची चित्रे (बारीक तपशील असलेली) — रुंदी मर्यादित न करता मोठी दाखवणे
+  controllerImageWrapKatha: {
+    maxWidth: '100%',
+    margin: '0 0 8px 0',
+  },
+  zoomHintLight: {
+    fontSize: '13px',
+    color: designSystem.colors.secondary,
+    textAlign: 'center',
+    margin: '0 0 20px 0',
+  },
+  zoomHintDark: {
+    fontSize: '13px',
+    color: '#B8B8B8',
+    textAlign: 'center',
+    margin: '-8px 0 20px 0',
+  },
+  imageLightboxOverlay: {
+    position: 'fixed',
+    inset: 0,
+    background: 'rgba(0, 0, 0, 0.94)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '20px',
+    zIndex: 1000,
+    cursor: 'zoom-out',
+  },
+  imageLightboxImg: {
+    maxWidth: '100%',
+    maxHeight: '100%',
+    objectFit: 'contain',
+    borderRadius: '8px',
+    boxShadow: '0 8px 40px rgba(0, 0, 0, 0.6)',
+    cursor: 'default',
+  },
+  imageLightboxClose: {
+    position: 'fixed',
+    top: '16px',
+    right: '16px',
+    width: '44px',
+    height: '44px',
+    borderRadius: '50%',
+    border: 'none',
+    background: 'rgba(255, 255, 255, 0.15)',
+    color: '#FFF',
+    fontSize: '20px',
+    cursor: 'pointer',
+    zIndex: 1001,
   },
   audienceImageWrapWide: {
     display: 'flex',
