@@ -345,6 +345,7 @@ const ControllerMode = ({
 
   const isSankalpaPause = currentStep?.isSankalpaPause === true;
   const isSankalpaSection = currentSection?.id === 's04';
+  const isKathaSection = currentSection?.id === 's13';
 
   useEffect(() => {
     const wakeLock = async () => {
@@ -448,13 +449,13 @@ const ControllerMode = ({
 
           {isSankalpaPause && <SankalpaPauseCard hostData={hostData} panchangData={panchangData} />}
 
-          <div style={currentStep.kathaText ? styles.controllerImageWrapKatha : styles.controllerImageWrap}>
+          <div style={isKathaSection ? styles.controllerImageWrapKatha : styles.controllerImageWrap}>
             <StepImage
               imageFile={currentStep.imageFile}
               imageFiles={currentStep.imageFiles}
               alt={currentStep.title}
-              wide={Boolean(currentStep.kathaText)}
-              zoomable={Boolean(currentStep.kathaText)}
+              wide={isKathaSection}
+              zoomable={isKathaSection}
               hintVariant="light"
             />
           </div>
@@ -519,6 +520,7 @@ const ControllerMode = ({
 const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx, sankalpaText, mediaTarget = 'controller', volume = 1 }) => {
   const isLandscapeWide = useLandscapeWide();
   const isKathaStep = Boolean(currentStep.kathaText);
+  const isKathaSection = currentSection?.id === 's13';
   const showKathaSplit = isKathaStep && isLandscapeWide;
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const playsHere = mediaTarget === 'audience';
@@ -558,8 +560,8 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
               imageFile={currentStep.imageFile}
               imageFiles={currentStep.imageFiles}
               alt={currentStep.title}
-              wide={isKathaStep}
-              zoomable={isKathaStep}
+              wide={isKathaSection}
+              zoomable={isKathaSection}
               hintVariant="dark"
             />
 
