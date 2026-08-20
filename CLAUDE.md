@@ -11,10 +11,18 @@ Self-Serve Pooja (पूजेसाठी.app / पूजासाथी.app) �
 बनवले आहे. निर्माता: Vivek Bhaskar Sathe (VivSa), Self-Serve Pooja Foundation.
 
 - **भाषा डोमेन्स**: मराठी → पूजेसाठी.app, हिंदी → पूजासाथी.app, English → self-serve-pooja.app
-- **स्टॅक**: React 18 + Vite, Cloudflare Pages + Pages Functions (`functions/api/sync.js`,
-  `functions/api/viewers.js`), Cloudflare R2 वर ऑडिओ (MP3) होस्टिंग.
+- **स्टॅक**: React 18 + Vite, Cloudflare Pages + Pages Functions (`functions/api/`),
+  Cloudflare D1 (`POOJAS_DB` — निर्देशक-यादी/login), Cloudflare R2 वर ऑडिओ/व्हिडिओ होस्टिंग,
+  Cloudflare Durable Object (`worker/` — live sync, तपशील खाली).
 - **आर्किटेक्चर**: Two-device — नियंत्रक (Controller, minimalist) + दर्शक (Audience Display,
-  rich) — दोन्ही एका पूजा-कोडने sync होतात.
+  rich) — दोन्ही एका पूजा-कोडने `functions/api/room.js` → `PujaRoom` Durable Object
+  (`worker/puja-room.js`) मार्फत WebSocket ने real-time sync होतात (पूर्वीचे KV-आधारित
+  polling/heartbeat — `/api/sync`, `/api/viewers` — ऑगस्ट २०२६ मध्ये काढून टाकले, कारण
+  दर्शक-heartbeat ने Cloudflare KV चा रोजचा मोफत लेखन-कोटा (१,०००/दिवस) एका पूजेतच संपत होता.
+  नवीन रचनेत नियंत्रक पायरी बदलताच सर्व दर्शकांना तात्काळ push मिळतो, आणि दर्शक-उपस्थिती
+  उघड्या WebSocket जोडणीवरूनच कळते — वेगळे heartbeat-लेखन नाही. तैनातीच्या पायऱ्या
+  `worker/README.md` मध्ये आहेत — DO Worker स्वतंत्रपणे deploy करावा लागतो (`npm run
+  sync:deploy`) आणि Pages ला एकदाच dashboard वरून त्याच्याशी जोडावे लागते).
 - **सामग्री**: १४१ पायऱ्या, १२७ मंत्र, सोपे मराठी अर्थ, पाच अध्यायांची सत्यनारायण कथा —
   हे मूळ काम अत्यंत दुर्मिळ आणि मौल्यवान आहे. कोणतेही नवीन फीचर जोडताना हे झाकले जाऊ नये.
 - मुख्य फाइल्स: `src/App.jsx`, `src/components/PujaScreen.jsx` (नियंत्रक+दर्शक मोड),

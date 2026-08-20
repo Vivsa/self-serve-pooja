@@ -8,8 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "sync:dev": "wrangler dev --ip 0.0.0.0 --port 8787",
-    "sync:deploy": "wrangler deploy"
+    "sync:dev": "wrangler dev --config worker/wrangler.toml --ip 0.0.0.0 --port 8787",
+    "sync:deploy": "wrangler deploy --config worker/wrangler.toml"
   },
   "dependencies": {
     "react": "^18.2.0",

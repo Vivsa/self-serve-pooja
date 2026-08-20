@@ -206,19 +206,86 @@ const StepImage = ({ imageFile, imageFiles, alt, wide, zoomable, hintVariant = '
   );
 };
 
-// दर्शक मोड — मोठ्या (desktop/TV) आडव्या स्क्रीनवर कथा-पायऱ्यांसाठी बाजू-बाजूला मांडणी:
-// डावीकडे मोठी चित्रे (स्वतंत्र स्क्रोल), उजवीकडे कथेचा मजकूर (स्वतंत्र स्क्रोल)
-const KathaSplitView = ({ currentStep }) => (
-  <div style={styles.kathaSplitWrap}>
-    <div style={styles.kathaSplitImages}>
-      <StepImage imageFile={currentStep.imageFile} imageFiles={currentStep.imageFiles} alt={currentStep.title} wide zoomable hintVariant="dark" />
+// दर्शक मोड — मोठ्या (desktop/TV) आडव्या स्क्रीनवर सर्वच पायऱ्यांसाठी बाजू-बाजूला मांडणी (डावीकडे ८०% / उजवीकडे २०%):
+// डावीकडे चित्र(े)/व्हिडिओ — अनेक चित्रे असल्यास आडवे स्वतंत्र स्क्रोल; उजवीकडे शीर्षक+मंत्र+अर्थ+कथा — स्वतंत्र उभे स्क्रोल.
+// चित्रच नसेल (काही मजकूर-फक्त पायऱ्या) तर उजवा स्तंभ पूर्ण रुंदी घेतो.
+const AudienceSplitView = ({ currentSection, currentStep, sankalpaText, playsHere, audioUnlocked, volume, audienceAudioRef }) => {
+  const files = currentStep.imageFiles && currentStep.imageFiles.length > 0
+    ? currentStep.imageFiles
+    : currentStep.imageFile ? [currentStep.imageFile] : [];
+  const hasVisual = files.length > 0 || currentStep.mediaType === 'video';
+  const [zoomedFile, setZoomedFile] = useState(null);
+
+  return (
+    <div className="puja-audience-split">
+      {hasVisual && (
+        <div className="puja-audience-split-images">
+          {files.map((file) => (
+            <img
+              key={file}
+              src={`/${file}`}
+              alt={currentStep.title || ''}
+              style={styles.audienceSplitImage}
+              loading="eager"
+              onClick={() => setZoomedFile(file)}
+            />
+          ))}
+          {playsHere && audioUnlocked && currentStep.mediaType === 'video' && (
+            <VideoPlayer
+              videoFile={currentStep.videoFile}
+              videoLink={currentStep.videoLink}
+              videoIsLocal={currentStep.videoIsLocal}
+              startSeconds={currentStep.videoStartSeconds || 0}
+              volume={volume}
+              style={{ height: '100%', width: 'auto', maxWidth: 'none' }}
+            />
+          )}
+        </div>
+      )}
+
+      <div className="puja-audience-split-text" style={!hasVisual ? styles.audienceSplitTextFull : undefined}>
+        <h1 style={styles.audienceSplitSectionTitle}>{currentSection.title}</h1>
+        <h2 style={styles.audienceSplitStepTitle}>{currentStep.title}</h2>
+
+        {currentSection?.id === 's04' && <SankalpaTextCard sankalpaText={sankalpaText} variant="audience" />}
+
+        {playsHere && audioUnlocked && currentStep.mediaType === 'audio' && currentStep.audioFile && (
+          <audio
+            key={currentStep.audioFile}
+            ref={audienceAudioRef}
+            src={`${AUDIO_BASE_URL}/${currentStep.audioFile}`}
+            style={{ width: '100%', marginBottom: '16px' }}
+            controls
+            autoPlay
+          />
+        )}
+
+        {currentStep.participation && (
+          <div style={{ fontSize: '14px', color: designSystem.colors.gold, marginBottom: '14px' }}>
+            {currentStep.participation === 'family-joins' && '🙏 परिवार सहभागी'}
+            {currentStep.participation === 'all-together' && '🕉️ सर्वांनी एकत्र'}
+          </div>
+        )}
+
+        {currentStep.instruction && (
+          <p style={{ fontSize: '14px', color: '#E0E0E0', lineHeight: '1.7', marginBottom: '14px' }}>{currentStep.instruction}</p>
+        )}
+
+        {currentStep.kathaTitle && <h3 style={styles.audienceKathaTitle}>🪔 {currentStep.kathaTitle}</h3>}
+        {currentStep.mantraText && <p style={styles.audienceMantra}>{currentStep.mantraText}</p>}
+        {currentStep.mantraMeaningInMarathi && <p style={styles.audienceMeaning}>{currentStep.mantraMeaningInMarathi}</p>}
+        {currentStep.kathaText && <p style={styles.audienceKatha}>{currentStep.kathaText}</p>}
+      </div>
+
+      {zoomedFile && (
+        <div style={styles.imageLightboxOverlay} onClick={() => setZoomedFile(null)}>
+          <img src={`/${zoomedFile}`} alt="" style={styles.imageLightboxImg} onClick={(e) => e.stopPropagation()} />
+          <button style={styles.imageLightboxClose} onClick={() => setZoomedFile(null)} aria-label="बंद करा">✕</button>
+        </div>
+      )}
     </div>
-    <div style={styles.kathaSplitText}>
-      {currentStep.kathaTitle && <h3 style={styles.audienceKathaTitle}>🪔 {currentStep.kathaTitle}</h3>}
-      {currentStep.kathaText && <p style={styles.audienceKatha}>{currentStep.kathaText}</p>}
-    </div>
-  </div>
-);
+  );
+};
 
 // दर्शक मोड — मंत्र + सोपा मराठी अर्थ + कथा भक्तिभावाने दाखवणारा भाग
 const MantraDisplayForAudience = ({ mantraText, mantraMeaningInMarathi, kathaTitle, kathaText }) => {
@@ -517,11 +584,9 @@ const ControllerMode = ({
   );
 };
 
-const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx, sankalpaText, mediaTarget = 'controller', volume = 1 }) => {
+const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sections, currentSectionIdx, currentStepIdx, sankalpaText, mediaTarget = 'controller', volume = 1, onManualSync }) => {
   const isLandscapeWide = useLandscapeWide();
-  const isKathaStep = Boolean(currentStep.kathaText);
   const isKathaSection = currentSection?.id === 's13';
-  const showKathaSplit = isKathaStep && isLandscapeWide;
   const [audioUnlocked, setAudioUnlocked] = useState(false);
   const playsHere = mediaTarget === 'audience';
   const audienceAudioRef = useRef(null);
@@ -540,11 +605,26 @@ const AudienceMode = ({ currentSection, currentStep, hostData, panchangData, sec
         )}
         <div style={styles.audienceSummaryBar}>
           <span>{buildSummaryLine(hostData, panchangData)}</span>
-          <span>⏱️ {calcRemainingTime(sections, currentSectionIdx, currentStepIdx)}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span>⏱️ {calcRemainingTime(sections, currentSectionIdx, currentStepIdx)}</span>
+            {onManualSync && (
+              <button onClick={onManualSync} style={styles.manualSyncButton} title="नियंत्रकासोबत पुन्हा जुळवा">
+                🔄 आत्ता जुळवा
+              </button>
+            )}
+          </div>
         </div>
 
-        {showKathaSplit ? (
-          <KathaSplitView currentStep={currentStep} />
+        {isLandscapeWide ? (
+          <AudienceSplitView
+            currentSection={currentSection}
+            currentStep={currentStep}
+            sankalpaText={sankalpaText}
+            playsHere={playsHere}
+            audioUnlocked={audioUnlocked}
+            volume={volume}
+            audienceAudioRef={audienceAudioRef}
+          />
         ) : (
           <div className="puja-scrollable" style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '24px', textAlign: 'center' }}>
             <h1 style={{ fontSize: '36px', fontWeight: '600', color: designSystem.colors.gold, margin: '0 0 12px 0' }}>
@@ -627,6 +707,7 @@ const PujaScreen = ({
   volume,
   onToggleMediaTarget,
   onSetVolume,
+  onManualSync,
   onNext,
   onPrev,
   onJumpTo,
@@ -667,6 +748,7 @@ const PujaScreen = ({
       currentStepIdx={currentStepIdx}
       mediaTarget={mediaTarget}
       volume={volume}
+      onManualSync={onManualSync}
     />
   );
 };
@@ -816,30 +898,38 @@ const styles = {
     gap: '20px',
     width: '100%',
   },
-  // दर्शक — desktop/TV वर कथा-पायऱ्यांसाठी बाजू-बाजूला मांडणी (चित्रे व मजकूर दोन्ही स्वतंत्रपणे स्क्रोल होतात)
-  kathaSplitWrap: {
-    flex: 1,
+  // दर्शक — desktop/TV वर सर्व पायऱ्यांसाठी बाजू-बाजूला मांडणी (चित्रे ८०% / मजकूर २०%,
+  // दोन्ही स्तंभांची प्रत्यक्ष रुंदी व स्क्रोल .puja-audience-split* CSS class मध्ये ठरते — src/index.css पहा)
+  audienceSplitImage: {
+    height: '100%',
+    width: 'auto',
+    maxWidth: 'none',
+    borderRadius: '10px',
+    border: `2px solid ${designSystem.colors.gold}`,
+    boxShadow: '0 8px 28px rgba(0, 0, 0, 0.5)',
+    display: 'block',
+    cursor: 'zoom-in',
+  },
+  audienceSplitTextFull: {
+    flex: '1 1 100%',
+    maxWidth: '100%',
+    textAlign: 'center',
+    alignItems: 'center',
     display: 'flex',
-    flexDirection: 'row',
-    overflow: 'hidden',
-    minHeight: 0,
-  },
-  kathaSplitImages: {
-    flex: '0 0 76%',
-    maxWidth: '76%',
-    height: '100%',
-    overflowY: 'auto',
+    flexDirection: 'column',
     padding: '24px',
-    boxSizing: 'border-box',
-    borderRight: '1px solid rgba(212, 165, 116, 0.25)',
   },
-  kathaSplitText: {
-    flex: '1 1 24%',
-    height: '100%',
-    overflowY: 'auto',
-    padding: '24px 28px',
-    boxSizing: 'border-box',
-    textAlign: 'left',
+  audienceSplitSectionTitle: {
+    fontSize: '22px',
+    fontWeight: '600',
+    color: designSystem.colors.gold,
+    margin: '0 0 8px 0',
+  },
+  audienceSplitStepTitle: {
+    fontSize: '18px',
+    fontWeight: '500',
+    color: '#FFF',
+    margin: '0 0 16px 0',
   },
   // दर्शक — भक्तिभावाने मंत्र/अर्थ/कथा दाखवणे
   audienceMantraWrap: {
@@ -1029,10 +1119,21 @@ const styles = {
   audienceSummaryBar: {
     display: 'flex',
     justifyContent: 'space-between',
+    alignItems: 'center',
     padding: '10px 16px',
     background: '#000',
     color: designSystem.colors.gold,
     fontSize: '13px',
+  },
+  manualSyncButton: {
+    background: 'transparent',
+    border: `1px solid ${designSystem.colors.gold}`,
+    color: designSystem.colors.gold,
+    borderRadius: '6px',
+    padding: '4px 10px',
+    fontSize: '12px',
+    cursor: 'pointer',
+    fontFamily: 'Noto Devanagari, sans-serif',
   },
   overlay: {
     position: 'fixed',

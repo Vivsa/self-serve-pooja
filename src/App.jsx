@@ -67,9 +67,25 @@ function App() {
   const [sankalpaData, setSankalpaData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const statePollRef = useRef(null);
-  const viewersPollRef = useRef(null);
-  const heartbeatRef = useRef(null);
+  // पूजा-कोडासाठी उघडलेली WebSocket जोडणी (नियंत्रक व दर्शक दोघेही — /api/room मार्फत PujaRoom
+  // Durable Object शी थेट, पायरी बदलताच तात्काळ push मिळते, दर सेकंदाला विचारावे लागत नाही)
+  const roomSocketRef = useRef(null);
+  const reconnectTimeoutRef = useRef(null);
+  const reconnectAttemptRef = useRef(0);
+  const connectRoomRef = useRef(null);
+  // WS-व्यवस्थापन effect पायरी बदलताच पुन्हा चालत नाही (मुद्दाम — तसं झाल्यास प्रत्येक पायरीला
+  // जोडणी तुटून पुन्हा जोडावी लागेल), त्यामुळे reconnect-वेळी नियंत्रकाची ताजी स्थिती इथून वाचतो
+  const latestControllerStateRef = useRef({});
+  useEffect(() => {
+    latestControllerStateRef.current = {
+      sectionIdx: currentSectionIdx,
+      stepIdx: currentStepIdx,
+      panchangData,
+      hostData,
+      mediaTarget,
+      volume,
+    };
+  }, [currentSectionIdx, currentStepIdx, panchangData, hostData, mediaTarget, volume]);
 
   // वार गणना
   useEffect(() => {
@@ -104,9 +120,10 @@ function App() {
     }
   };
 
-  // ===== सर्व्हरला status='complete' कळवणे (KV + D1 दोन्ही अद्ययावत होतात) =====
-  const postSyncStatus = (code, sectionIdx, stepIdx, status) =>
-    fetch('/api/sync', {
+  // ===== सर्व्हरला (Durable Object + D1 दोन्हीकडे) स्थिती कळवणे — HTTP द्वारे, एकदाच (WebSocket
+  // उघडे नसतानाही, उदा. dashboard मधून थेट "समाप्त करा") =====
+  const postRoomStatus = (code, sectionIdx, stepIdx, status) =>
+    fetch(`/api/room?code=${code}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -121,6 +138,29 @@ function App() {
         volume,
       }),
     }).catch(() => {});
+
+  // ===== नियंत्रक: चालू WebSocket जोडणीवरून पायरी-बदल तात्काळ पाठवणे (server push चा स्रोत) =====
+  const sendStepChange = (code, sectionIdx, stepIdx, status) => {
+    const payload = {
+      type: 'stepChange',
+      code,
+      sectionIdx: sectionIdx || 0,
+      stepIdx: stepIdx || 0,
+      panchangData,
+      hostData,
+      updatedAt: Date.now(),
+      status,
+      mediaTarget,
+      volume,
+    };
+    const ws = roomSocketRef.current;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(payload));
+    } else {
+      // सॉकेट अजून तयार नसेल (उदा. जोडणी होत असतानाच पायरी बदलली) तर HTTP fallback
+      postRoomStatus(code, sectionIdx, stepIdx, status);
+    }
+  };
 
   // ===== admin API साठी Authorization header आपोआप जोडणारे मदत-कार्य — सत्र संपले तर लॉगिनकडे परत पाठवते =====
   const adminFetch = async (path, options = {}, tokenOverride) => {
@@ -217,7 +257,7 @@ function App() {
       return;
     }
     try {
-      const res = await fetch(`/api/sync?code=${codeInput}`);
+      const res = await fetch(`/api/room?code=${codeInput}`);
       const data = await res.json();
       if (!data.found) {
         setCodeError('हा कोड सापडला नाही — कृपया नियंत्रकाकडून पुन्हा तपासा');
@@ -305,7 +345,7 @@ function App() {
 
   const handleEndPooja = async (code) => {
     const row = poojas.find((p) => p.code === code);
-    await postSyncStatus(code, row?.sectionIdx, row?.stepIdx, 'complete');
+    await postRoomStatus(code, row?.sectionIdx, row?.stepIdx, 'complete');
     loadPoojas();
   };
 
@@ -384,76 +424,136 @@ function App() {
   // ===== नियंत्रक: शेवटच्या पायरीनंतर "पुढे" दाबल्यावर पूजा समाप्त करा =====
   const handlePujaComplete = async () => {
     if (pujaCode) {
-      await postSyncStatus(pujaCode, currentSectionIdx, currentStepIdx, 'complete');
+      sendStepChange(pujaCode, currentSectionIdx, currentStepIdx, 'complete');
     }
     setScreen('pujaClosed');
   };
 
-  // ===== नियंत्रक: पायरी/ऑडिओ-स्थान/आवाज बदलल्यावर सर्व्हरला कळवा (पंचांग+यजमान माहितीसह) =====
+  // ===== नियंत्रक: पायरी/ऑडिओ-स्थान/आवाज बदलल्यावर तात्काळ (WebSocket द्वारे) सर्व्हरला कळवा =====
   useEffect(() => {
     if (deviceMode !== 'controller' || screen !== 'mainPuja' || !pujaCode) return;
-    postSyncStatus(pujaCode, currentSectionIdx, currentStepIdx, 'performing');
+    sendStepChange(pujaCode, currentSectionIdx, currentStepIdx, 'performing');
   }, [currentSectionIdx, currentStepIdx, deviceMode, screen, pujaCode, mediaTarget, volume]);
 
-  // ===== नियंत्रक: दर्शक-यादी दर ३ सेकंदांनी वाचा =====
+  // ===== नियंत्रक व दर्शक दोघेही: पूजा-कोडासाठी एकच सतत-चालू WebSocket जोडणी =====
+  // - दर्शक: सर्व्हरकडून पायरी-बदल तात्काळ मिळतात (poll करावे लागत नाही), स्वतःची उपस्थिती
+  //   जोडणी उघडी असण्यावरूनच आपोआप कळते (वेगळे heartbeat-लेखन नाही)
+  // - नियंत्रक: दर्शक-यादी तात्काळ मिळते; जोडणी उघडताच स्वतःची (कदाचित dashboard वरून resume
+  //   केलेली) स्थिती सर्व्हरला कळवली जाते, जेणेकरून उशिरा जोडणाऱ्या दर्शकालाही बरोबर स्थिती मिळेल
+  // - जोडणी अनपेक्षितपणे तुटली (उदा. TV ब्राउझर बॅकग्राउंडला गेल्यावर) तर वाढत्या विलंबाने पुन्हा
+  //   जोडते; टॅब परत समोर आल्यावर (visibilitychange) लगेच तपासून गरज असल्यास पुन्हा जोडते
   useEffect(() => {
-    if (deviceMode !== 'controller' || screen !== 'mainPuja' || !pujaCode) return;
+    if (screen !== 'mainPuja' || !pujaCode) return;
+    let cancelled = false;
 
-    const pollViewers = async () => {
-      try {
-        const res = await fetch(`/api/viewers?code=${pujaCode}`);
-        const data = await res.json();
-        setViewers(data.viewers || []);
-      } catch (err) {}
-    };
+    const connect = () => {
+      if (cancelled) return;
+      const proto = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const params = new URLSearchParams({ code: pujaCode, role: deviceMode });
+      if (deviceMode === 'audience') {
+        params.set('viewerId', viewerId);
+        params.set('name', viewerName || '');
+      }
+      const ws = new WebSocket(`${proto}//${window.location.host}/api/room?${params.toString()}`);
+      roomSocketRef.current = ws;
 
-    pollViewers();
-    viewersPollRef.current = setInterval(pollViewers, 3000);
-    return () => clearInterval(viewersPollRef.current);
-  }, [deviceMode, screen, pujaCode]);
-
-  // ===== दर्शक: दर १ सेकंदाला सध्याची स्थिती वाचा (जलद sync) =====
-  useEffect(() => {
-    if (deviceMode !== 'audience' || screen !== 'mainPuja' || !pujaCode) return;
-
-    const poll = async () => {
-      try {
-        const res = await fetch(`/api/sync?code=${pujaCode}`);
-        const data = await res.json();
-        if (data.found) {
-          setCurrentSectionIdx(data.sectionIdx);
-          setCurrentStepIdx(data.stepIdx);
-          if (data.mediaTarget) setMediaTarget(data.mediaTarget);
-          if (data.volume !== undefined) setVolume(data.volume);
-          if (data.status === 'complete') {
-            clearInterval(statePollRef.current);
-            setScreen('pujaClosed');
-          }
+      ws.onopen = () => {
+        reconnectAttemptRef.current = 0;
+        if (deviceMode === 'controller') {
+          // ही जोडणी-effect पायरी बदलताच पुन्हा चालत नाही, म्हणून बंद पडलेल्या क्षणापर्यंतची जुनी
+          // (stale) स्थिती परत पाठवली जाऊ नये यासाठी ताजी मूल्ये थेट ref मधून वाचतो
+          const s = latestControllerStateRef.current;
+          ws.send(
+            JSON.stringify({
+              type: 'stepChange',
+              code: pujaCode,
+              sectionIdx: s.sectionIdx || 0,
+              stepIdx: s.stepIdx || 0,
+              panchangData: s.panchangData,
+              hostData: s.hostData,
+              updatedAt: Date.now(),
+              status: 'performing',
+              mediaTarget: s.mediaTarget,
+              volume: s.volume,
+            })
+          );
         }
-      } catch (err) {}
+      };
+
+      ws.onmessage = (event) => {
+        let msg;
+        try {
+          msg = JSON.parse(event.data);
+        } catch (err) {
+          return;
+        }
+        if (msg.type === 'viewers') {
+          setViewers(msg.viewers || []);
+        } else if (msg.type === 'state' && deviceMode === 'audience' && msg.found !== false) {
+          setCurrentSectionIdx(msg.sectionIdx || 0);
+          setCurrentStepIdx(msg.stepIdx || 0);
+          if (msg.panchangData) setPanchangData(msg.panchangData);
+          if (msg.hostData) setHostData(msg.hostData);
+          if (msg.mediaTarget) setMediaTarget(msg.mediaTarget);
+          if (msg.volume !== undefined) setVolume(msg.volume);
+          if (msg.status === 'complete') setScreen('pujaClosed');
+        }
+      };
+
+      ws.onclose = () => {
+        if (cancelled) return;
+        roomSocketRef.current = null;
+        const delay = Math.min(1000 * 2 ** reconnectAttemptRef.current, 15000);
+        reconnectAttemptRef.current += 1;
+        reconnectTimeoutRef.current = setTimeout(connect, delay);
+      };
+
+      ws.onerror = () => ws.close();
     };
 
-    poll();
-    statePollRef.current = setInterval(poll, 1000);
-    return () => clearInterval(statePollRef.current);
-  }, [deviceMode, screen, pujaCode]);
+    connectRoomRef.current = connect;
+    connect();
 
-  // ===== दर्शक: स्वतःची उपस्थिती (heartbeat) दर ५ सेकंदांनी नोंदवा =====
-  useEffect(() => {
-    if (deviceMode !== 'audience' || screen !== 'mainPuja' || !pujaCode || !viewerName) return;
-
-    const sendHeartbeat = () => {
-      fetch('/api/viewers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: pujaCode, viewerId, name: viewerName }),
-      }).catch(() => {});
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return;
+      const ws = roomSocketRef.current;
+      if (!ws || ws.readyState === WebSocket.CLOSED || ws.readyState === WebSocket.CLOSING) {
+        clearTimeout(reconnectTimeoutRef.current);
+        reconnectAttemptRef.current = 0;
+        connect();
+      }
     };
+    document.addEventListener('visibilitychange', onVisible);
 
-    sendHeartbeat();
-    heartbeatRef.current = setInterval(sendHeartbeat, 5000);
-    return () => clearInterval(heartbeatRef.current);
-  }, [deviceMode, screen, pujaCode, viewerName, viewerId]);
+    return () => {
+      cancelled = true;
+      document.removeEventListener('visibilitychange', onVisible);
+      clearTimeout(reconnectTimeoutRef.current);
+      if (roomSocketRef.current) {
+        roomSocketRef.current.onclose = null;
+        roomSocketRef.current.close();
+        roomSocketRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deviceMode, screen, pujaCode, viewerId, viewerName]);
+
+  // ===== दर्शक: "🔄 आत्ता जुळवा" — मॅन्युअली, तात्काळ पुन्हा-जोडणी करून ताजी स्थिती आणणे =====
+  const handleManualSync = () => {
+    clearTimeout(reconnectTimeoutRef.current);
+    reconnectAttemptRef.current = 0;
+    const ws = roomSocketRef.current;
+    if (ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({ type: 'syncRequest' }));
+      return;
+    }
+    if (ws) {
+      ws.onclose = null;
+      ws.close();
+      roomSocketRef.current = null;
+    }
+    if (connectRoomRef.current) connectRoomRef.current();
+  };
 
   if (loading) {
     return (
@@ -593,6 +693,7 @@ function App() {
       volume={volume}
       onToggleMediaTarget={() => setMediaTarget((t) => (t === 'controller' ? 'audience' : 'controller'))}
       onSetVolume={setVolume}
+      onManualSync={handleManualSync}
       onNext={() => {
         if (currentStepIdx < currentSection.steps.length - 1) {
           setCurrentStepIdx(currentStepIdx + 1);

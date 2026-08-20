@@ -1,0 +1,20 @@
+name = "self-serve-pooja-sync"
+main = "puja-room.js"
+compatibility_date = "2026-08-20"
+
+[[durable_objects.bindings]]
+name = "PUJA_ROOM"
+class_name = "PujaRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["PujaRoom"]
+
+# Pages Function ला D1 शी संपर्क साधण्याची गरज नाही (ते आधीच functions/api/admin/* मध्ये स्वतंत्र
+# बांधलेले आहे), पण याच DO ला कायमस्वरूपी पूजा-यादी (poojas table) अद्ययावत करता यावी म्हणून इथेही
+# तीच D1 database बांधलेली आहे. database_id Cloudflare dashboard वरून (D1 → self-serve-pooja-db
+# सारखे नाव → Database ID) कॉपी करून इथे भरा.
+[[d1_databases]]
+binding = "POOJAS_DB"
+database_name = "REPLACE_WITH_YOUR_D1_DATABASE_NAME"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

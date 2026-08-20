@@ -150,6 +150,46 @@ audio::-webkit-media-controls-time-remaining-display {
   .puja-scrollable {
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    /* flex-item ची डीफॉल्ट किमान-उंची "आतल्या मजकुराइतकी" धरली जाते, त्यामुळे
+       मोठा मजकूर/चित्र असलेल्या पायऱ्यांवर overflow-y:auto कधीच लागू होत नसे —
+       तो भाग स्क्रीनबाहेर जाऊन कायमचा अदृश्य राही (न-स्क्रोल-होणारी TV स्क्रीन). */
+    min-height: 0;
+  }
+
+  /* दर्शक-मोड (TV/desktop): डावीकडे चित्र(े) ८०%, उजवीकडे मजकूर २०% — दोन्ही स्वतंत्र स्क्रोल */
+  .puja-audience-split {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .puja-audience-split-images {
+    flex: 0 0 80%;
+    max-width: 80%;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+  }
+
+  .puja-audience-split-images > * {
+    scroll-snap-align: center;
+  }
+
+  .puja-audience-split-text {
+    flex: 0 0 20%;
+    max-width: 20%;
+    min-width: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 20px 20px 20px 0;
   }
 
   .puja-nav-drawer {
